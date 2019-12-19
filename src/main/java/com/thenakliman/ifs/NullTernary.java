@@ -1,10 +1,27 @@
-package com.thenakliman.If;
+package com.thenakliman.ifs;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 
-final class Ternary {
+final class NullTernary {
+
+    interface IElse<T, R> {
+        R elseReturn(R value);
+
+        R elseMap(Function<T, R> function);
+
+        <X extends Throwable> R elseThrow(Supplier<? extends X> exceptionSupplier) throws X;
+    }
+
+    interface IExceptionHandler<T> {
+        <U> U elseReturn(U returnValue);
+
+        <U> U elseMap(Function<T, U> function);
+
+        <X extends Throwable> void elseThrow(Supplier<? extends X> exceptionSupplier) throws X;
+    }
+
     interface IThen<T> {
         <R> IElse<T, R> thenReturn(R returnValue);
 
@@ -46,22 +63,6 @@ final class Ternary {
         public <X extends Throwable> IExceptionHandler<T> thenThrow(Supplier<? extends X> exceptionSupplier) throws X {
             return new NonNullExceptionHandler<>(this.object);
         }
-    }
-
-    interface IElse<T, R> {
-        R elseReturn(R value);
-
-        R elseMap(Function<T, R> function);
-
-        <X extends Throwable> R elseThrow(Supplier<? extends X> exceptionSupplier) throws X;
-    }
-
-    interface IExceptionHandler<T> {
-        <U> U elseReturn(U returnValue);
-
-        <U> U elseMap(Function<T, U> function);
-
-        <X extends Throwable> void elseThrow(Supplier<? extends X> exceptionSupplier) throws X;
     }
 
     static final class NonNullExceptionHandler<T> implements IExceptionHandler<T> {

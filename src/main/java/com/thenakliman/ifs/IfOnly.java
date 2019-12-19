@@ -1,18 +1,18 @@
-package com.thenakliman.If;
+package com.thenakliman.ifs;
 
 
 import java.util.function.Supplier;
 
-public class Then {
+final class IfOnly {
 
-    public interface SingularCall {
-        void thenCall(TernaryExpressionEvaluator.IProcedure procedure);
+    public interface IExecute {
+        void thenCall(IfExpression.IProcedure procedure);
 
         <X extends Throwable> void thenThrow(Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    public static class IThen implements SingularCall {
-        public void thenCall(TernaryExpressionEvaluator.IProcedure procedure) {
+    public static class Execution implements IExecute {
+        public void thenCall(IfExpression.IProcedure procedure) {
             procedure.call();
         }
 
@@ -21,8 +21,8 @@ public class Then {
         }
     }
 
-    public static class DontCall implements SingularCall {
-        public void thenCall(TernaryExpressionEvaluator.IProcedure procedure) {
+    public static class SkipExecution implements IExecute {
+        public void thenCall(IfExpression.IProcedure procedure) {
             // do not call
         }
 
