@@ -1,6 +1,7 @@
 package com.thenakliman.ifs;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 final class If {
     private If() {
@@ -45,5 +46,27 @@ final class If {
         }
 
         return new IfOnly.Execution();
+    }
+
+    public static <T> T ifOrElse(Supplier<Boolean> supplier, Supplier<T> ifSupplier, Supplier<T> elseSupplier) {
+        if (supplier.get()) {
+            return ifSupplier.get();
+        }
+
+        return elseSupplier.get();
+    }
+
+    public static void ifOrElse(Supplier<Boolean> supplier, IfExpression.IProcedure ifProcessor, IfExpression.IProcedure elseProcessor) {
+        if (supplier.get()) {
+            ifProcessor.call();
+        }
+
+        elseProcessor.call();
+    }
+
+    public static void ifTrue(Supplier<Boolean> supplier, IfExpression.IProcedure ifProcessor) {
+        if (supplier.get()) {
+            ifProcessor.call();
+        }
     }
 }

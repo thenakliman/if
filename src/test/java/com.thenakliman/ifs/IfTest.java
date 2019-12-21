@@ -491,6 +491,58 @@ public class IfTest {
         verify(testHelper, times(0)).thenCallMe();
     }
 
+    @Test
+    public void ifOrElse_returnTrueSupplierResult_whenSupplierEvaluatesToTrue() {
+
+        final Integer value = If.ifOrElse(() -> true, () -> 10, () -> 20);
+
+        assertThat(value, is(10));
+    }
+
+    @Test
+    public void ifOrElse_returnFalseSupplierResult_whenSupplierEvaluatesToFalse() {
+
+        final Integer value = If.ifOrElse(() -> false, () -> 10, () -> 20);
+
+        assertThat(value, is(20));
+    }
+
+    @Test
+    public void ifOrElse_callTrueSupplier_whenSupplierEvaluatesToTrue() {
+        TestHelper testHelper = mock(TestHelper.class);
+
+        If.ifOrElse(() -> true, testHelper::thenCallMe, testHelper::elseCallMe);
+
+        verify(testHelper).thenCallMe();
+    }
+
+    @Test
+    public void ifOrElse_callFalseSupplierResult_whenSupplierEvaluatesToFalse() {
+        TestHelper testHelper = mock(TestHelper.class);
+
+        If.ifOrElse(() -> false, testHelper::thenCallMe, testHelper::elseCallMe);
+
+        verify(testHelper).elseCallMe();
+    }
+
+    @Test
+    public void ifTrue_callSupplier_whenSupplierEvaluates() {
+        TestHelper testHelper = mock(TestHelper.class);
+
+        If.ifTrue(() -> true, testHelper::thenCallMe);
+
+        verify(testHelper).thenCallMe();
+    }
+
+    @Test
+    public void ifTrue_doesNotCallSupplier_whenSupplierEvaluates() {
+        TestHelper testHelper = mock(TestHelper.class);
+
+        If.ifTrue(() -> false, testHelper::thenCallMe);
+
+        verify(testHelper, times(0)).thenCallMe();
+    }
+
     static class TestHelper {
         void thenCallMe() {
             System.out.println("then call me");
