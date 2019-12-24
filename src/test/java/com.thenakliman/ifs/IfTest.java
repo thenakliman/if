@@ -6,9 +6,7 @@ import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class IfTest {
     @Rule
@@ -494,7 +492,7 @@ public class IfTest {
     @Test
     public void ifOrElse_returnTrueSupplierResult_whenSupplierEvaluatesToTrue() {
 
-        final Integer value = If.ifOrElse(() -> true, () -> 10, () -> 20);
+        final Integer value = If.orElse(() -> true, () -> 10, () -> 20);
 
         assertThat(value, is(10));
     }
@@ -502,7 +500,7 @@ public class IfTest {
     @Test
     public void ifOrElse_returnFalseSupplierResult_whenSupplierEvaluatesToFalse() {
 
-        final Integer value = If.ifOrElse(() -> false, () -> 10, () -> 20);
+        final Integer value = If.orElse(() -> false, () -> 10, () -> 20);
 
         assertThat(value, is(20));
     }
@@ -511,7 +509,7 @@ public class IfTest {
     public void ifOrElse_callTrueSupplier_whenSupplierEvaluatesToTrue() {
         TestHelper testHelper = mock(TestHelper.class);
 
-        If.ifOrElse(() -> true, testHelper::thenCallMe, testHelper::elseCallMe);
+        If.orElse(() -> true, testHelper::thenCallMe, testHelper::elseCallMe);
 
         verify(testHelper).thenCallMe();
     }
@@ -520,7 +518,7 @@ public class IfTest {
     public void ifOrElse_callFalseSupplierResult_whenSupplierEvaluatesToFalse() {
         TestHelper testHelper = mock(TestHelper.class);
 
-        If.ifOrElse(() -> false, testHelper::thenCallMe, testHelper::elseCallMe);
+        If.orElse(() -> false, testHelper::thenCallMe, testHelper::elseCallMe);
 
         verify(testHelper).elseCallMe();
     }
@@ -546,7 +544,7 @@ public class IfTest {
     @Test
     public void ifOrElse_returnTrueSupplierResult_whenExpressionEvaluatesToTrue() {
 
-        final Integer value = If.ifOrElse(true, () -> 10, () -> 20);
+        final Integer value = If.orElse(true, () -> 10, () -> 20);
 
         assertThat(value, is(10));
     }
@@ -554,7 +552,7 @@ public class IfTest {
     @Test
     public void ifOrElse_returnFalseSupplierResult_whenExpressionEvaluatesToFalse() {
 
-        final Integer value = If.ifOrElse(false, () -> 10, () -> 20);
+        final Integer value = If.orElse(false, () -> 10, () -> 20);
 
         assertThat(value, is(20));
     }
@@ -562,7 +560,7 @@ public class IfTest {
     @Test
     public void ifOrElse_returnThenReturnValue_whenExpressionEvaluatesToTrue() {
 
-        final Integer value = If.ifOrElse(true, 10, 20);
+        final Integer value = If.orElse(true, 10, 20);
 
         assertThat(value, is(10));
     }
@@ -570,7 +568,7 @@ public class IfTest {
     @Test
     public void ifOrElse_returnElseReturnValue_whenExpressionEvaluatesToFalse() {
 
-        final Integer value = If.ifOrElse(false, 10, 20);
+        final Integer value = If.orElse(false, 10, 20);
 
         assertThat(value, is(20));
     }
@@ -578,7 +576,7 @@ public class IfTest {
     @Test
     public void ifOrElse_returnThenReturnValue_whenSupplierIsTrue() {
 
-        final Integer value = If.ifOrElse(() -> true, 10, 20);
+        final Integer value = If.orElse(() -> true, 10, 20);
 
         assertThat(value, is(10));
     }
@@ -586,7 +584,7 @@ public class IfTest {
     @Test
     public void ifOrElse_returnElseReturnValue_whenSupplierIsFalse() {
 
-        final Integer value = If.ifOrElse(() -> false, 10, 20);
+        final Integer value = If.orElse(() -> false, 10, 20);
 
         assertThat(value, is(20));
     }
@@ -595,7 +593,7 @@ public class IfTest {
     public void ifOrElse_callTrueSupplier_whenExpressionEvaluatesToTrue() {
         TestHelper testHelper = mock(TestHelper.class);
 
-        If.ifOrElse(true, testHelper::thenCallMe, testHelper::elseCallMe);
+        If.orElse(true, testHelper::thenCallMe, testHelper::elseCallMe);
 
         verify(testHelper).thenCallMe();
     }
@@ -604,7 +602,7 @@ public class IfTest {
     public void ifOrElse_callFalseSupplierResult_whenExpressionEvaluatesToFalse() {
         TestHelper testHelper = mock(TestHelper.class);
 
-        If.ifOrElse(false, testHelper::thenCallMe, testHelper::elseCallMe);
+        If.orElse(false, testHelper::thenCallMe, testHelper::elseCallMe);
 
         verify(testHelper).elseCallMe();
     }
