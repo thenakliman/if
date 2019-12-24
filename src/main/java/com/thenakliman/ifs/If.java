@@ -64,9 +64,47 @@ final class If {
         elseProcessor.call();
     }
 
+    public static <T> T ifOrElse(boolean expressionResult, Supplier<T> ifSupplier, Supplier<T> elseSupplier) {
+        if (expressionResult) {
+            return ifSupplier.get();
+        }
+
+        return elseSupplier.get();
+    }
+
+    public static void ifOrElse(boolean expressionResult, IfExpression.IProcedure ifProcessor, IfExpression.IProcedure elseProcessor) {
+        if (expressionResult) {
+            ifProcessor.call();
+        }
+
+        elseProcessor.call();
+    }
+
+    public static void ifTrue(boolean expressionResult, IfExpression.IProcedure ifProcessor) {
+        if (expressionResult) {
+            ifProcessor.call();
+        }
+    }
+
     public static void ifTrue(Supplier<Boolean> supplier, IfExpression.IProcedure ifProcessor) {
         if (supplier.get()) {
             ifProcessor.call();
         }
+    }
+
+    public static <T> T ifOrElse(boolean expressionResult, T thenValue, T elseValue) {
+        if (expressionResult) {
+            return thenValue;
+        }
+
+        return elseValue;
+    }
+
+    public static <T> T ifOrElse(Supplier<Boolean> supplier, T thenValue, T elseValue) {
+        if (supplier.get()) {
+            return thenValue;
+        }
+
+        return elseValue;
     }
 }
