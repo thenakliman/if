@@ -1,4 +1,5 @@
-This library helps to improve code readability of if else statements. Following examples shows its usage
+This library helps to improve code readability of if else statements. It has introduced two different syntax. Following
+examples shows its usage
 
 
 1. __*If else syntax for expression*__
@@ -21,6 +22,12 @@ This library helps to improve code readability of if else statements. Following 
                          .thenReturn(160km/h)
                          .elseReturn(40km/h);
     setSpeed(allowedSpeed);
+    ```
+    And as
+    ```
+    int allowedSpeed = if.orElse(currentRoad == "highWay", 160km/h, 40km/h);
+    setSpeed(allowedSpeed);
+    ```
 
 + If an expression is true then process something otherwise use some other process
     ```
@@ -33,9 +40,14 @@ This library helps to improve code readability of if else statements. Following 
     
     Simplified as
     ```
-    int allowedSpeed = if.isTrue(currentRoad == "known")
-                         .thenCall(() -> driveWithFun())
-                         .elseCall(() -> informPassenger());
+    if.isTrue(currentRoad == "known")
+      .thenCall(() -> driveWithFun())
+      .elseCall(() -> informPassenger());
+    ```
+
+    And as
+    ```
+    if.orElse(currentRoad == "known", () -> driveWithFun(), () -> informPassenger());
     ```
 
 + If an expression is true then get a value from one mechanism otherwise from a different one 
@@ -55,6 +67,15 @@ This library helps to improve code readability of if else statements. Following 
     int allowedSpeed = if.isTrue(allowedSpeedAtCurrentLocation == "unknown")
                          .thenGet(() -> callAFriendAndGetIt())
                          .elseGet(() -> getItFromMyBrain());
+    accelerateToGivenSpeed(allowedSpeed)
+    ```
+    
+    And as
+    ```
+    int allowedSpeed = if.orElse(allowedSpeedAtCurrentLocation == "unknown",
+                                 () -> callAFriendAndGetIt(),
+                                 () -> getItFromMyBrain());
+
     accelerateToGivenSpeed(allowedSpeed)
     ```
 
@@ -100,6 +121,12 @@ This library helps to improve code readability of if else statements. Following 
                           .elseReturn("Box does not exist");
     showMessage(boxMessage);
     ```
+    
+    And as
+    ```
+    String boxMessage = if.nullOrElse(box, "Box exist", "Box does not exist");
+    showMessage(boxMessage);
+    ```
 
 + A value is calculated if a variable is null otherwise use given value,
     ```
@@ -138,6 +165,12 @@ This library helps to improve code readability of if else statements. Following 
     
     showMessage(boxMessage);
     ```
+    
+    And as:
+    ```
+    String boxMessage = if.isNull(receivedBoxMessage, () -> generateMessage(), () -> generateMessageOtherWay());    
+    showMessage(boxMessage);
+    ```
 
 + A value is calculated one way, if a variable is null, otherwise use non null value to generate value,
     ```
@@ -156,6 +189,15 @@ This library helps to improve code readability of if else statements. Following 
                           .thenGet(() -> generateMessage())
                           .elseMap((nonNullReceivedBoxMessage) -> generateMessage(nonNullReceivedBoxMessage));
     
+    showMessage(boxMessage);
+    ```
+
+    And as:
+    ```
+    String boxMessage = if.isNull(receivedBoxMessage,
+                                  () -> generateMessage()),
+                                  (nonNullReceivedBoxMessage) -> generateMessage(nonNullReceivedBoxMessage));
+
     showMessage(boxMessage);
     ```
 
@@ -196,6 +238,12 @@ Simplified version:
 
     ```
     if.isTrueThen(purseStatus == "not found").thenCall(() -> putCashInPocket(cash))
+    goToShopping();
+    ```
+And as:
+
+    ```
+    if.isTrueThen(purseStatus == "not found", () -> putCashInPocket(cash))
     goToShopping();
     ```
 
