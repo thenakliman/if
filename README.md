@@ -17,7 +17,7 @@ This library helps to improve code readability of if else statements. Following 
     
     Simplified as
     ```
-    int allowedSpeed = if.expressionIsTrue(currentRoad == "highWay")
+    int allowedSpeed = if.isTrue(currentRoad == "highWay")
                          .thenReturn(160km/h)
                          .elseReturn(40km/h);
     setSpeed(allowedSpeed);
@@ -33,7 +33,7 @@ This library helps to improve code readability of if else statements. Following 
     
     Simplified as
     ```
-    int allowedSpeed = if.expressionIsTrue(currentRoad == "known")
+    int allowedSpeed = if.isTrue(currentRoad == "known")
                          .thenCall(() -> driveWithFun())
                          .elseCall(() -> informPassenger());
     ```
@@ -52,7 +52,7 @@ This library helps to improve code readability of if else statements. Following 
     
     Simplified as
     ```
-    int allowedSpeed = if.expressionIsTrue(allowedSpeedAtCurrentLocation == "unknown")
+    int allowedSpeed = if.isTrue(allowedSpeedAtCurrentLocation == "unknown")
                          .thenGet(() -> callAFriendAndGetIt())
                          .elseGet(() -> getItFromMyBrain());
     accelerateToGivenSpeed(allowedSpeed)
@@ -71,9 +71,9 @@ This library helps to improve code readability of if else statements. Following 
     
     Simplified as
     ```
-    if.expressionIsTrue(currentSpeed == "unacceptable-level")
-                         .thenThrow(() -> new UnacceptableSpeed(currentSpeed))
-                         .elseCall(() -> informSpeedIsAcceptable());
+    if.isTrue(currentSpeed == "unacceptable-level")
+      .thenThrow(() -> new UnacceptableSpeed(currentSpeed))
+      .elseCall(() -> informSpeedIsAcceptable());
     driveSmoothly(allowedSpeed)
     ```
     
@@ -169,7 +169,7 @@ This library helps to improve code readability of if else statements. Following 
     
     showMessage(boxMessage)
     ```
-    
+
     Simplified version:
     ```
     String boxMessage = if.isNull(receivedBoxMessage)
@@ -183,38 +183,34 @@ and so on. see test cases to know more about available options.
 
 3. __*do something only if some condition is true, else part is empty*__
 
-+. If you like to process something when condition is true else nothing,
-```
++. If you like to process something when condition is true else nothing
+
+    ```
     if(purseStatus == "not found) {
         putCashInPocket(cash);
     }
-    
     goToShopping();
-```    
+    ```
 
 Simplified version:
 
-
-```
-
-    if.isTrue(purseStatus == "not found").thenCall(() -> putCashInPocket(cash))    
+    ```
+    if.isTrueThen(purseStatus == "not found").thenCall(() -> putCashInPocket(cash))
     goToShopping();
-
-```
+    ```
 
 +. If you throw some exception when condition is met otherwise perform operations normally
-```
+
+    ```
     if(breakStatus == "not working") {
         throw new BreakNotWorking();
     }
-    
     keepDriving();
-```    
+    ```
 
 Simplified version:
 
-
-```
-    if.isTrue(breakStatus == "not working")).thenThrow(() -> new BreakNotWorking())    
+    ```
+    if.isTrueThen(breakStatus == "not working")).thenThrow(() -> new BreakNotWorking())
     keepDriving();
-```
+    ```
