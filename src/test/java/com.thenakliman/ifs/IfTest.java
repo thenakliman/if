@@ -498,6 +498,22 @@ public class IfTest {
     }
 
     @Test
+    public void nullOrElse_returnTrueSupplierResult_whenIsNull() {
+
+        final Integer value = If.nullOrElse(null, () -> 10, () -> 20);
+
+        assertThat(value, is(10));
+    }
+
+    @Test
+    public void nullOrElse_returnFalseSupplierResult_whenNonNull() {
+
+        final Integer value = If.nullOrElse("202", () -> 10, () -> 20);
+
+        assertThat(value, is(20));
+    }
+
+    @Test
     public void ifOrElse_returnFalseSupplierResult_whenSupplierEvaluatesToFalse() {
 
         final Integer value = If.orElse(() -> false, () -> 10, () -> 20);
@@ -530,6 +546,39 @@ public class IfTest {
         If.ifTrue(() -> true, testHelper::thenCallMe);
 
         verify(testHelper).thenCallMe();
+    }
+
+    @Test
+    public void isNull_thenCall_whenObjectIsNull() {
+        TestHelper testHelper = mock(TestHelper.class);
+
+        If.isNull(null, testHelper::thenCallMe);
+
+        verify(testHelper).thenCallMe();
+    }
+
+    @Test
+    public void isNull_doNotCall_whenObjectIsNonNull() {
+        TestHelper testHelper = mock(TestHelper.class);
+
+        If.isNull("something", testHelper::thenCallMe);
+
+        verify(testHelper, times(0)).thenCallMe();
+    }
+
+    @Test
+    public void nullOrElse_thenReturnValueFunction_whenObjectIsNonNull() {
+        Integer value = If.nullOrElse("1000", () -> 100, Integer::valueOf);
+
+        assertThat(value, is(1000));
+    }
+
+    @Test
+    public void nullOrElse_thenReturnValue_whenObjectIsNull() {
+        String conditionValue = null;
+        Integer value = If.nullOrElse(conditionValue, () -> 100, Integer::valueOf);
+
+        assertThat(value, is(100));
     }
 
     @Test
