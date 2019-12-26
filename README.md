@@ -19,8 +19,8 @@ examples shows its usage
     Simplified as
     ```
     int allowedSpeed = if.isTrue(currentRoad == "highWay")
-                         .thenReturn(160km/h)
-                         .elseReturn(40km/h);
+                         .thenValue(160km/h)
+                         .elseValue(40km/h);
     setSpeed(allowedSpeed);
     ```
     And as
@@ -117,8 +117,8 @@ examples shows its usage
     Simplified as
     ```
     String boxMessage = if.isNull(box)
-                          .thenReturn("Box exist")
-                          .elseReturn("Box does not exist");
+                          .thenValue("Box exist")
+                          .elseValue("Box does not exist");
     showMessage(boxMessage);
     ```
     
@@ -141,7 +141,7 @@ examples shows its usage
     ```
     String boxMessage = if.isNull(boxMessage)
                           .thenGet(() -> generateMessage())
-                          .elseReturn(boxMessage);
+                          .elseValue(boxMessage);
     
     showMessage(boxMessage);
     ```

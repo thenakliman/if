@@ -16,8 +16,8 @@ public class IfTest {
     public void ifIsNull_returnNullValue_whenObjectIsNull() {
         final String value = If
                 .isNull(null)
-                .thenReturn("null")
-                .elseReturn("non null");
+                .thenValue("null")
+                .elseValue("non null");
 
         assertThat(value, is("null"));
     }
@@ -26,8 +26,8 @@ public class IfTest {
     public void ifIsNull_returnFalseValue_whenObjectIsNotNull() {
         final String value = If
                 .isNull("somevalue")
-                .thenReturn("null")
-                .elseReturn("non null");
+                .thenValue("null")
+                .elseValue("non null");
 
         assertThat(value, is("non null"));
     }
@@ -37,7 +37,7 @@ public class IfTest {
         final String value = If
                 .isNull(null)
                 .thenGet(() -> "null")
-                .elseReturn("non null");
+                .elseValue("non null");
 
         assertThat(value, is("null"));
     }
@@ -47,7 +47,7 @@ public class IfTest {
         final String value = If
                 .isNull("somevalue")
                 .thenGet(() -> "null")
-                .elseReturn("non null");
+                .elseValue("non null");
 
         assertThat(value, is("non null"));
     }
@@ -56,7 +56,7 @@ public class IfTest {
     public void ifIsNull_returnValueFromMapFunction_whenObjectIsNotNull() {
         final String value = If
                 .isNull("somevalue")
-                .thenReturn("null")
+                .thenValue("null")
                 .elseMap((some) -> some + " non null");
 
         assertThat(value, is("somevalue non null"));
@@ -66,7 +66,7 @@ public class IfTest {
     public void ifIsNull_returnValueFromIfValue_whenObjectIsNull() {
         final String value = If
                 .isNull(null)
-                .thenReturn("null")
+                .thenValue("null")
                 .elseMap((some) -> some + " non null");
 
         assertThat(value, is("null"));
@@ -97,7 +97,7 @@ public class IfTest {
         expectedException.expect(RuntimeException.class);
         If.isNull(null)
                 .thenThrow(() -> new RuntimeException("somevalue"))
-                .elseReturn("non null");
+                .elseValue("non null");
     }
 
     @Test
@@ -105,7 +105,7 @@ public class IfTest {
         final String value = If
                 .isNull("somevalue")
                 .thenThrow(() -> new RuntimeException("somevalue"))
-                .elseReturn("non null");
+                .elseValue("non null");
 
         assertThat(value, is("non null"));
     }
@@ -132,7 +132,7 @@ public class IfTest {
     public void ifIsNull_returnValue_whenObjectIsNull() {
         final String value = If
                 .isNull(null)
-                .thenReturn("null")
+                .thenValue("null")
                 .elseThrow(RuntimeException::new);
 
         assertThat(value, is("null"));
@@ -142,7 +142,7 @@ public class IfTest {
     public void ifIsNull_throwExceptionWhenReturnFromIf_whenObjectIsNotNull() {
         expectedException.expect(RuntimeException.class);
         If.isNull("not null")
-                .thenReturn("somevalue")
+                .thenValue("somevalue")
                 .elseThrow(RuntimeException::new);
     }
 

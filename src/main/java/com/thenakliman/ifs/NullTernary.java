@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 final class NullTernary {
 
     interface IElse<T, R> {
-        R elseReturn(R value);
+        R elseValue(R value);
 
         R elseMap(Function<T, R> function);
 
@@ -15,7 +15,7 @@ final class NullTernary {
     }
 
     interface IExceptionHandler<T> {
-        <U> U elseReturn(U returnValue);
+        <U> U elseValue(U returnValue);
 
         <U> U elseMap(Function<T, U> function);
 
@@ -23,7 +23,7 @@ final class NullTernary {
     }
 
     interface IThen<T> {
-        <R> IElse<T, R> thenReturn(R returnValue);
+        <R> IElse<T, R> thenValue(R returnValue);
 
         <R> IElse<T, R> thenGet(Supplier<R> supplier);
 
@@ -31,7 +31,7 @@ final class NullTernary {
     }
 
     static final class NullThen<T> implements IThen<T> {
-        public <R> IElse<T, R> thenReturn(R returnValue) {
+        public <R> IElse<T, R> thenValue(R returnValue) {
             return new NullElse<>(returnValue);
         }
 
@@ -52,7 +52,7 @@ final class NullTernary {
             this.object = object;
         }
 
-        public <R> IElse<T, R> thenReturn(R returnValue) {
+        public <R> IElse<T, R> thenValue(R returnValue) {
             return new NonNullElse<>(this.object);
         }
 
@@ -73,7 +73,7 @@ final class NullTernary {
         }
 
         @Override
-        public <U> U elseReturn(U returnValue) {
+        public <U> U elseValue(U returnValue) {
             return returnValue;
         }
 
@@ -95,7 +95,7 @@ final class NullTernary {
         }
 
         @Override
-        public R elseReturn(R value) {
+        public R elseValue(R value) {
             return this.returnValue;
         }
 
@@ -117,7 +117,7 @@ final class NullTernary {
         }
 
         @Override
-        public R elseReturn(R returnValue) {
+        public R elseValue(R returnValue) {
             return returnValue;
         }
 
