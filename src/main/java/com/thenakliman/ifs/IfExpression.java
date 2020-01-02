@@ -167,8 +167,8 @@ class IfExpression {
         }
 
         @Override
-        public T elseValue(T value) {
-            return value;
+        public T elseValue(T elseValue) {
+            return this.value;
         }
 
         @Override

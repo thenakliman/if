@@ -332,7 +332,6 @@ public class IfTest {
 
     @Test
     public void isTrue_thenValueElseThrow_returnThenValue_whenExpressionIsTrue() {
-        expectedException.expect(IllegalArgumentException.class);
         final Integer value = If.isTrue(true)
                 .thenValue(30)
                 .elseThrow(IllegalArgumentException::new);
@@ -357,7 +356,7 @@ public class IfTest {
 
     @Test
     public void isTrue_thenGetElseValue_returnThenGetValue_whenExpressionIsTrue() {
-        final Integer value = If.isTrue(false)
+        final Integer value = If.isTrue(true)
                 .thenGet(() -> 30)
                 .elseValue(31);
         assertThat(value, is(30));
