@@ -10,6 +10,8 @@ class IfExpression {
     interface IElseGet<T> {
         T elseGet(Supplier<T> supplier);
 
+        T elseValue(T value);
+
         <X extends Throwable> T elseThrow(Supplier<? extends X> exceptionSupplier) throws X;
     }
 
@@ -19,8 +21,18 @@ class IfExpression {
         <X extends Throwable> void elseThrow(Supplier<? extends X> exceptionSupplier) throws X;
     }
 
+    interface IElseValue<T> {
+        T elseGet(Supplier<T> supplier);
+
+        T elseValue(T value);
+
+        <X extends Throwable> T elseThrow(Supplier<? extends X> exceptionSupplier) throws X;
+    }
+
     interface IExpressionThen {
         <T> IElseGet<T> thenGet(Supplier<T> supplier);
+
+        <T> IElseValue<T> thenValue(T supplier);
 
         IElseCall thenCall(IProcedure procedure);
 
@@ -29,6 +41,8 @@ class IfExpression {
 
     interface IExceptionElse {
         void elseCall(IProcedure procedure);
+
+        <T> T elseValue(T value);
 
         <X extends Throwable> void elseThrow(Supplier<? extends X> exceptionSupplier) throws X;
 
@@ -43,6 +57,11 @@ class IfExpression {
         }
 
         @Override
+        public <T> IElseValue<T> thenValue(T value) {
+            return new TrueElseValue<T>(value);
+        }
+
+        @Override
         public IElseCall thenCall(IProcedure procedure) {
             procedure.call();
             return new TrueExpressionCall();
@@ -50,6 +69,28 @@ class IfExpression {
 
         public <X extends Throwable> IExceptionElse thenThrow(Supplier<? extends X> exceptionSupplier) throws X {
             throw exceptionSupplier.get();
+        }
+
+        private static class TrueElseValue<T> implements IElseValue<T> {
+            final private T value;
+            public TrueElseValue(T value) {
+                this.value = value;
+            }
+
+            @Override
+            public T elseGet(Supplier<T> T) {
+                return this.value;
+            }
+
+            @Override
+            public T elseValue(T value) {
+                return this.value;
+            }
+
+            @Override
+            public <X extends Throwable> T elseThrow(Supplier<? extends X> exceptionSupplier) throws X {
+                return this.value;
+            }
         }
     }
 
@@ -60,6 +101,11 @@ class IfExpression {
         }
 
         @Override
+        public <T> IElseValue<T> thenValue(T supplier) {
+            return new FalseElseValue<T>();
+        }
+
+        @Override
         public IElseCall thenCall(IProcedure procedure) {
             return new FalseExpressionCall();
         }
@@ -67,12 +113,33 @@ class IfExpression {
         public <X extends Throwable> IExceptionElse thenThrow(Supplier<? extends X> exceptionSupplier) throws X {
             return new ElseException();
         }
+
+        private static class FalseElseValue<T> implements IElseValue<T> {
+            @Override
+            public T elseGet(Supplier<T> supplier) {
+                return supplier.get();
+            }
+
+            @Override
+            public T elseValue(T value) {
+                return value;
+            }
+
+            public <X extends Throwable> T elseThrow(Supplier<? extends X> exceptionSupplier) throws X {
+                throw exceptionSupplier.get();
+            }
+        }
     }
 
     private static class ElseException implements IExceptionElse {
         @Override
         public void elseCall(IProcedure procedure) {
             procedure.call();
+        }
+
+        @Override
+        public <T> T elseValue(T value) {
+            return value;
         }
 
         @Override
@@ -88,7 +155,7 @@ class IfExpression {
 
 
     static class TrueExpressionGet<T> implements IElseGet<T> {
-        private T value;
+        final private T value;
 
         TrueExpressionGet(T value) {
             this.value = value;
@@ -97,6 +164,11 @@ class IfExpression {
         @Override
         public T elseGet(Supplier<T> supplier) {
             return this.value;
+        }
+
+        @Override
+        public T elseValue(T value) {
+            return value;
         }
 
         @Override
@@ -109,6 +181,11 @@ class IfExpression {
         @Override
         public T elseGet(Supplier<T> supplier) {
             return supplier.get();
+        }
+
+        @Override
+        public T elseValue(T value) {
+            return value;
         }
 
         @Override
