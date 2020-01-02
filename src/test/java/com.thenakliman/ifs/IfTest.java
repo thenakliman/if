@@ -13,7 +13,7 @@ public class IfTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void ifIsNull_returnNullValue_whenObjectIsNull() {
+    public void ifIsNull_thenValueElseValue_returnThenValue_whenObjectIsNull() {
         final String value = If
                 .isNull(null)
                 .thenValue("null")
@@ -23,7 +23,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifIsNull_returnFalseValue_whenObjectIsNotNull() {
+    public void ifIsNull_thenValueElseValue_returnElseValue_whenObjectIsNotNull() {
         final String value = If
                 .isNull("somevalue")
                 .thenValue("null")
@@ -33,7 +33,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifIsNull_returnValueFromIfSupplier_whenObjectIsNull() {
+    public void ifIsNull_thenGetElseValue_returnThenGetValue_whenObjectIsNull() {
         final String value = If
                 .isNull(null)
                 .thenGet(() -> "null")
@@ -43,7 +43,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifIsNull_returnValueFromElse_whenObjectIsNotNull() {
+    public void ifIsNull_thenGetElseValue_returnElseValue_whenObjectIsNotNull() {
         final String value = If
                 .isNull("somevalue")
                 .thenGet(() -> "null")
@@ -53,7 +53,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifIsNull_returnValueFromMapFunction_whenObjectIsNotNull() {
+    public void ifIsNull_thenValueElseMap_returnElseMapValue_whenObjectIsNotNull() {
         final String value = If
                 .isNull("somevalue")
                 .thenValue("null")
@@ -63,7 +63,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifIsNull_returnValueFromIfValue_whenObjectIsNull() {
+    public void ifIsNull_thenValueElseMap_returnThenValue_whenObjectIsNull() {
         final String value = If
                 .isNull(null)
                 .thenValue("null")
@@ -73,7 +73,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifIsNull_returnValueFromIfMap_whenObjectIsNull() {
+    public void ifIsNull_thenGetElseMap_returnThenGetValue_whenObjectIsNull() {
         final String value = If
                 .isNull(null)
                 .thenGet(() -> "null")
@@ -83,7 +83,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifIsNull_returnValueFromElseMap_whenObjectIsNotNull() {
+    public void ifIsNull_thenGetElseMap_returnElseMapValue_whenObjectIsNotNull() {
         final String value = If
                 .isNull("somevalue")
                 .thenGet(() -> "null")
@@ -93,7 +93,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifIsNull_throwException_whenObjectIsNull() {
+    public void ifIsNull_thenThrowElseValue_throwThenThrowException_whenObjectIsNull() {
         expectedException.expect(RuntimeException.class);
         If.isNull(null)
                 .thenThrow(() -> new RuntimeException("somevalue"))
@@ -101,7 +101,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifIsNull_returnNonNullValue_whenObjectIsNotNull() {
+    public void ifIsNull_thenThrowElseValue_returnElseValue_whenObjectIsNotNull() {
         final String value = If
                 .isNull("somevalue")
                 .thenThrow(() -> new RuntimeException("somevalue"))
@@ -111,7 +111,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifIsNull_throwException_whenObjectIsNullAndMappingIsProvided() {
+    public void ifIsNull_thenThrowElseMap_throwThenThrowException_whenObjectIsNull() {
         expectedException.expect(RuntimeException.class);
         If.isNull(null)
                 .thenThrow(() -> new RuntimeException("somevalue"))
@@ -119,7 +119,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifIsNull_returnMappedValue_whenObjectIsNotNull() {
+    public void ifIsNull_thenThrowElseMap_returnElseMapValue_whenObjectIsNotNull() {
         final String value = If
                 .isNull("somevalue")
                 .thenThrow(() -> new RuntimeException("somevalue"))
@@ -129,7 +129,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifIsNull_returnValue_whenObjectIsNull() {
+    public void ifIsNull_thenValueElseThrow_returnThenValue_whenObjectIsNull() {
         final String value = If
                 .isNull(null)
                 .thenValue("null")
@@ -139,7 +139,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifIsNull_throwExceptionWhenReturnFromIf_whenObjectIsNotNull() {
+    public void ifIsNull_thenValueElseThrow_throwElseThrowException_whenObjectIsNotNull() {
         expectedException.expect(RuntimeException.class);
         If.isNull("not null")
                 .thenValue("somevalue")
@@ -147,7 +147,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifIsNull_returnGetValue_whenObjectIsNull() {
+    public void ifIsNull_thenGetElseThrow_returnThenGetValue_whenObjectIsNull() {
         final String value = If
                 .isNull(null)
                 .thenGet(() -> "null")
@@ -158,7 +158,7 @@ public class IfTest {
 
 
     @Test
-    public void ifIsNull_throwException_whenObjectIsNotNull() {
+    public void ifIsNull_thenGetElseThrow_throwElseThrowException_whenObjectIsNotNull() {
         expectedException.expect(RuntimeException.class);
         If.isNull("not null")
                 .thenGet(() -> "somevalue")
@@ -166,7 +166,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifIsNull_throwExceptionDefinedInIf_whenObjectIsNull() {
+    public void ifIsNull_thenThrowElseThrow_throwThenThrowException_whenObjectIsNull() {
         expectedException.expect(IllegalArgumentException.class);
         If.isNull(null)
                 .thenThrow(IllegalArgumentException::new)
@@ -174,7 +174,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifIsNull_throwExceptionDefinedInElse_whenObjectIsNotNull() {
+    public void ifIsNull_thenThrowElseThrow_throwElseThrowException_whenObjectIsNotNull() {
         expectedException.expect(RuntimeException.class);
         If.isNull("some")
                 .thenThrow(IllegalArgumentException::new)
@@ -182,7 +182,7 @@ public class IfTest {
     }
 
     @Test
-    public void isTrue_returnValueFromThenGet_whenExpressionIsTrue() {
+    public void isTrue_thenGetElseGet_returnThenGetValue_whenExpressionIsTrue() {
         Integer value = If.isTrue(true)
                 .thenGet(() -> 10)
                 .elseGet(() -> 20);
@@ -191,7 +191,7 @@ public class IfTest {
     }
 
     @Test
-    public void isTrue_returnValueFromElseGet_whenExpressionIsFalse() {
+    public void isTrue_thenGetElseGet_returnElseGetValue_whenExpressionIsFalse() {
         Integer value = If.isTrue(false)
                 .thenGet(() -> 10)
                 .elseGet(() -> 20);
@@ -200,7 +200,7 @@ public class IfTest {
     }
 
     @Test
-    public void isTrue_shouldCallThen_whenExpressionIsTrue() {
+    public void isTrue_thenCallElseCall_callThenCall_whenExpressionIsTrue() {
         TestHelper testHelper = mock(TestHelper.class);
         If.isTrue(true)
                 .thenCall(testHelper::thenCallMe)
@@ -209,7 +209,7 @@ public class IfTest {
     }
 
     @Test
-    public void isTrue_shouldCallElse_whenExpressionIsFalse() {
+    public void isTrue_thenCallElseCall_callElseCall_whenExpressionIsFalse() {
         TestHelper testHelper = mock(TestHelper.class);
         If.isTrue(false)
                 .thenCall(testHelper::thenCallMe)
@@ -218,7 +218,7 @@ public class IfTest {
     }
 
     @Test
-    public void isTrue_shouldThrowExceptionInThen_whenExpressionIsTrue() {
+    public void isTrue_thenThrowElseCall_throwThenThrowException_whenExpressionIsTrue() {
         TestHelper testHelper = mock(TestHelper.class);
 
         expectedException.expect(IllegalArgumentException.class);
@@ -228,7 +228,7 @@ public class IfTest {
     }
 
     @Test
-    public void isTrue_shouldCallInElse_whenExpressionIsFalse() {
+    public void isTrue_ThenThrowElseCall_callThenCall_whenExpressionIsFalse() {
         TestHelper testHelper = mock(TestHelper.class);
 
         If.isTrue(false)
@@ -238,7 +238,7 @@ public class IfTest {
     }
 
     @Test
-    public void isTrue_shouldGetInElse_whenExpressionIsFalse() {
+    public void isTrue_thenThrowElseGet_returnElseGetValue_whenExpressionIsFalse() {
         final Integer value = If.isTrue(false)
                 .thenThrow(IllegalArgumentException::new)
                 .elseGet(() -> 20);
@@ -246,7 +246,7 @@ public class IfTest {
     }
 
     @Test
-    public void isTrue_throwException_whenExpressionIsTrueAndElseGetIsDefined() {
+    public void isTrue_thenThrowElseGet_throwThenThrowException_whenExpressionIsTrue() {
         expectedException.expect(IllegalArgumentException.class);
         If.isTrue(true)
                 .thenThrow(IllegalArgumentException::new)
@@ -254,7 +254,7 @@ public class IfTest {
     }
 
     @Test
-    public void isTrue_throwException_whenExpressionIsTrueAndElseHasElseThrow() {
+    public void isTrue_thenThrowElseThrow_throwElseThrowException_whenExpressionIsTrue() {
         expectedException.expect(IllegalArgumentException.class);
         If.isTrue(true)
                 .thenThrow(IllegalArgumentException::new)
@@ -262,7 +262,7 @@ public class IfTest {
     }
 
     @Test
-    public void isTrue_throwException_whenExpressionIsFalseAndElseAndThenHasThrow() {
+    public void isTrue_thenThrowElseThrow_throwElseThrowException_whenExpressionIsFalse() {
         expectedException.expect(RuntimeException.class);
         If.isTrue(false)
                 .thenThrow(IllegalArgumentException::new)
@@ -270,7 +270,7 @@ public class IfTest {
     }
 
     @Test
-    public void isTrue_throwException_whenExpressionIsFalseAndThenCallIsDefined() {
+    public void isTrue_thenCallElseThrow_throwElseThrowException_whenExpressionIsFalse() {
         TestHelper testHelper = mock(TestHelper.class);
 
         expectedException.expect(IllegalArgumentException.class);
@@ -280,7 +280,7 @@ public class IfTest {
     }
 
     @Test
-    public void isTrue_callMethod_whenExpressionIsTrueAndThenCallIsDefined() {
+    public void isTrue_thenCallElseThrow_callThenCall_whenExpressionIsTrue() {
         TestHelper testHelper = mock(TestHelper.class);
 
         If.isTrue(true)
@@ -291,7 +291,7 @@ public class IfTest {
     }
 
     @Test
-    public void isTrue_returnGetMethodResult_whenExpressionIsTrueAndThenGetIsDefined() {
+    public void isTrue_thenGetElseThrow_returnThenGet_whenExpressionIsTrue() {
         final Integer value = If.isTrue(true)
                 .thenGet(() -> 34)
                 .elseThrow(IllegalArgumentException::new);
@@ -299,7 +299,7 @@ public class IfTest {
     }
 
     @Test
-    public void isTrue_throwException_whenExpressionIsFalse() {
+    public void isTrue_thenGetElseThrow_throwElseThrowException_whenExpressionIsFalse() {
         expectedException.expect(IllegalArgumentException.class);
         If.isTrue(false)
                 .thenGet(() -> 34)
@@ -307,7 +307,7 @@ public class IfTest {
     }
 
     @Test
-    public void isFalse_returnValueFromThenGet_whenExpressionIsFalse() {
+    public void isFalse_thenGetElseGet_returnThenGetValue_whenExpressionIsFalse() {
         Integer value = If.isFalse(true)
                 .thenGet(() -> 10)
                 .elseGet(() -> 20);
@@ -316,7 +316,7 @@ public class IfTest {
     }
 
     @Test
-    public void isFalse_returnValueFromElseGet_whenExpressionIsTrue() {
+    public void isFalse_thenGetElseGet_returnElseGetValue_whenExpressionIsTrue() {
         Integer value = If.isFalse(true)
                 .thenGet(() -> 10)
                 .elseGet(() -> 20);
@@ -325,7 +325,7 @@ public class IfTest {
     }
 
     @Test
-    public void isFalse_shouldCallThen_whenExpressionIsFalse() {
+    public void isFalse_thenCallElseCall_callThenCall_whenExpressionIsFalse() {
         TestHelper testHelper = mock(TestHelper.class);
         If.isFalse(false)
                 .thenCall(testHelper::thenCallMe)
@@ -334,7 +334,7 @@ public class IfTest {
     }
 
     @Test
-    public void isFalse_shouldCallElse_whenExpressionIsTrue() {
+    public void isFalse_thenCallElseCall_callElseCall_whenExpressionIsTrue() {
         TestHelper testHelper = mock(TestHelper.class);
         If.isFalse(true)
                 .thenCall(testHelper::thenCallMe)
@@ -343,7 +343,7 @@ public class IfTest {
     }
 
     @Test
-    public void isFalse_shouldThrowExceptionInThen_whenExpressionIsFalse() {
+    public void isFalse_thenThrowElseCall_throwThenThrowException_whenExpressionIsFalse() {
         TestHelper testHelper = mock(TestHelper.class);
 
         expectedException.expect(IllegalArgumentException.class);
@@ -353,7 +353,7 @@ public class IfTest {
     }
 
     @Test
-    public void isFalse_shouldCallInElse_whenExpressionIsTrue() {
+    public void isFalse_thenThrowElseCall_callElseCall_whenExpressionIsTrue() {
         TestHelper testHelper = mock(TestHelper.class);
 
         If.isFalse(true)
@@ -363,7 +363,7 @@ public class IfTest {
     }
 
     @Test
-    public void isFalse_shouldGetInElse_whenExpressionIsTrue() {
+    public void isFalse_thenThrowElseGet_returnElseGetValue_whenExpressionIsTrue() {
         final Integer value = If.isFalse(true)
                 .thenThrow(IllegalArgumentException::new)
                 .elseGet(() -> 20);
@@ -371,7 +371,7 @@ public class IfTest {
     }
 
     @Test
-    public void isFalse_throwException_whenExpressionIsFalseAndElseGetIsDefined() {
+    public void isFalse_thenThrowElseGet_throwThenThrowException_whenExpressionIsFalse() {
         expectedException.expect(IllegalArgumentException.class);
         If.isFalse(false)
                 .thenThrow(IllegalArgumentException::new)
@@ -379,7 +379,7 @@ public class IfTest {
     }
 
     @Test
-    public void isFalse_throwException_whenExpressionIsFalseAndElseHasElseThrow() {
+    public void isFalse_thenThrowElseThrow_throwThenThrowException_whenExpressionIsFalse() {
         expectedException.expect(IllegalArgumentException.class);
         If.isFalse(false)
                 .thenThrow(IllegalArgumentException::new)
@@ -387,7 +387,7 @@ public class IfTest {
     }
 
     @Test
-    public void isFalse_throwException_whenExpressionIsTrueAndElseAndThenHasThrow() {
+    public void isFalse_thenThrowElseThrow_throwElseThrowException_whenExpressionIsTrue() {
         expectedException.expect(RuntimeException.class);
         If.isFalse(true)
                 .thenThrow(IllegalArgumentException::new)
@@ -395,7 +395,7 @@ public class IfTest {
     }
 
     @Test
-    public void isFalse_throwException_whenExpressionIsTrueAndThenCallIsDefined() {
+    public void isFalse_thenCallElseThrow_throwElseException_whenExpressionIsTrue() {
         TestHelper testHelper = mock(TestHelper.class);
 
         expectedException.expect(IllegalArgumentException.class);
@@ -405,7 +405,7 @@ public class IfTest {
     }
 
     @Test
-    public void isFalse_callMethod_whenExpressionIsFalseAndThenCallIsDefined() {
+    public void isFalse_thenCallElseThrow_callThenCall_whenExpressionIsFalse() {
         TestHelper testHelper = mock(TestHelper.class);
 
         If.isFalse(false)
@@ -416,7 +416,7 @@ public class IfTest {
     }
 
     @Test
-    public void isFalse_returnGetMethodResult_whenExpressionIsFalseAndThenGetIsDefined() {
+    public void isFalse_thenGetElseThrow_returnGetValue_whenExpressionIsFalse() {
         final Integer value = If.isFalse(false)
                 .thenGet(() -> 34)
                 .elseThrow(IllegalArgumentException::new);
@@ -424,7 +424,7 @@ public class IfTest {
     }
 
     @Test
-    public void isFalse_throwException_whenExpressionIsTrue() {
+    public void isFalse_thenGetElseThrow_throwElseThrow_whenExpressionIsTrue() {
         expectedException.expect(IllegalArgumentException.class);
         If.isFalse(true)
                 .thenGet(() -> 34)
@@ -432,18 +432,18 @@ public class IfTest {
     }
 
     @Test
-    public void isTrue_throwException_whenExpressionIsTrue() {
+    public void isTrueThen_thenThrow_whenExpressionIsTrue() {
         expectedException.expect(IllegalArgumentException.class);
         If.isTrueThen(true).thenThrow(IllegalArgumentException::new);
     }
 
     @Test
-    public void isTrue_doNotThrowException_whenExpressionIsFalse() {
+    public void isTrueThen_thenThrow_doNotThrowException_whenExpressionIsFalse() {
         If.isTrueThen(false).thenThrow(IllegalArgumentException::new);
     }
 
     @Test
-    public void isTrue_thenCall_whenExpressionIsTrue() {
+    public void isTrueThen_thenCall_callThenCall_whenExpressionIsTrue() {
         TestHelper testHelper = mock(TestHelper.class);
 
         If.isTrueThen(true).thenCall(testHelper::thenCallMe);
@@ -452,7 +452,7 @@ public class IfTest {
     }
 
     @Test
-    public void isTrue_dooNotCall_whenExpressionIsFalse() {
+    public void isTrueThen_thenCall_doNotCall_whenExpressionIsFalse() {
         TestHelper testHelper = mock(TestHelper.class);
 
         If.isTrueThen(false).thenCall(testHelper::thenCallMe);
@@ -461,18 +461,18 @@ public class IfTest {
     }
 
     @Test
-    public void isFalseThen_throwException_whenExpressionIsTrue() {
+    public void isFalseThen_thenThrow_throwThenThrowException_whenExpressionIsTrue() {
         expectedException.expect(IllegalArgumentException.class);
         If.isFalseThen(false).thenThrow(IllegalArgumentException::new);
     }
 
     @Test
-    public void isFalseThen_doNotThrowException_whenExpressionIsFalse() {
+    public void isFalseThen_thenThrow__doNotThrowException_whenExpressionIsFalse() {
         If.isFalseThen(true).thenThrow(IllegalArgumentException::new);
     }
 
     @Test
-    public void isFalseThen_thenCall_whenExpressionIsTrue() {
+    public void isFalseThen_thenCall_callThenCall_whenExpressionIsTrue() {
         TestHelper testHelper = mock(TestHelper.class);
 
         If.isFalseThen(false).thenCall(testHelper::thenCallMe);
@@ -481,7 +481,7 @@ public class IfTest {
     }
 
     @Test
-    public void isFalseThen_dooNotCall_whenExpressionIsFalse() {
+    public void isFalseThen_thenCall_doNotCall_whenExpressionIsFalse() {
         TestHelper testHelper = mock(TestHelper.class);
 
         If.isFalseThen(true).thenCall(testHelper::thenCallMe);
@@ -490,7 +490,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifOrElse_returnTrueSupplierResult_whenSupplierEvaluatesToTrue() {
+    public void ifOrElse_thenGetElseGet_returnThenGetValue_whenSupplierEvaluatesToTrue() {
 
         final Integer value = If.orElse(() -> true, () -> 10, () -> 20);
 
@@ -498,7 +498,7 @@ public class IfTest {
     }
 
     @Test
-    public void nullOrElse_returnTrueSupplierResult_whenIsNull() {
+    public void nullOrElse_thenGetElseGet_returnThenReturn_whenIsNull() {
 
         final Integer value = If.nullOrElse(null, () -> 10, () -> 20);
 
@@ -506,7 +506,7 @@ public class IfTest {
     }
 
     @Test
-    public void nullOrElse_returnFalseSupplierResult_whenNonNull() {
+    public void nullOrElse_thenGetElseGet_returnElseGet_whenNonNull() {
 
         final Integer value = If.nullOrElse("202", () -> 10, () -> 20);
 
@@ -514,7 +514,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifOrElse_returnFalseSupplierResult_whenSupplierEvaluatesToFalse() {
+    public void ifOrElse_thenGetElseGet_returnElseGetValue_whenSupplierEvaluatesToFalse() {
 
         final Integer value = If.orElse(() -> false, () -> 10, () -> 20);
 
@@ -522,7 +522,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifOrElse_callTrueSupplier_whenSupplierEvaluatesToTrue() {
+    public void ifOrElse_thenCallElseCall_callThenCall_whenSupplierEvaluatesToTrue() {
         TestHelper testHelper = mock(TestHelper.class);
 
         If.orElse(() -> true, testHelper::thenCallMe, testHelper::elseCallMe);
@@ -531,7 +531,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifOrElse_callFalseSupplierResult_whenSupplierEvaluatesToFalse() {
+    public void ifOrElse_thenCallElseCall_callElseCall_whenSupplierEvaluatesToFalse() {
         TestHelper testHelper = mock(TestHelper.class);
 
         If.orElse(() -> false, testHelper::thenCallMe, testHelper::elseCallMe);
@@ -540,7 +540,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifTrue_callSupplier_whenSupplierEvaluates() {
+    public void isTrueThen_thenCall_callThenCall_whenSupplierEvaluatesToTrue() {
         TestHelper testHelper = mock(TestHelper.class);
 
         If.isTrueThen(() -> true, testHelper::thenCallMe);
@@ -549,7 +549,7 @@ public class IfTest {
     }
 
     @Test
-    public void isNull_thenCall_whenObjectIsNull() {
+    public void isNullThen_thenCall_callThenCall_whenObjectIsNull() {
         TestHelper testHelper = mock(TestHelper.class);
 
         If.isNullThen(null, testHelper::thenCallMe);
@@ -558,7 +558,7 @@ public class IfTest {
     }
 
     @Test
-    public void isNull_doNotCall_whenObjectIsNonNull() {
+    public void isNullThen_thenCall_doNotCall_whenObjectIsNonNull() {
         TestHelper testHelper = mock(TestHelper.class);
 
         If.isNullThen("something", testHelper::thenCallMe);
@@ -567,14 +567,14 @@ public class IfTest {
     }
 
     @Test
-    public void nullOrElse_thenReturnValueFunction_whenObjectIsNonNull() {
+    public void nullOrElse_thenGetElseGet_returnElseGetValue_whenObjectIsNonNull() {
         Integer value = If.nullOrElse("1000", () -> 100, Integer::valueOf);
 
         assertThat(value, is(1000));
     }
 
     @Test
-    public void nullOrElse_thenReturnValue_whenObjectIsNull() {
+    public void nullOrElse_thenGetElseGet_returnThenGet_whenObjectIsNull() {
         String conditionValue = null;
         Integer value = If.nullOrElse(conditionValue, () -> 100, Integer::valueOf);
 
@@ -582,7 +582,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifTrue_doesNotCallSupplier_whenSupplierEvaluates() {
+    public void isTrueThen_thenCall_callThenCall_whenSupplierEvaluatesToFalse() {
         TestHelper testHelper = mock(TestHelper.class);
 
         If.isTrueThen(() -> false, testHelper::thenCallMe);
@@ -591,7 +591,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifOrElse_returnTrueSupplierResult_whenExpressionEvaluatesToTrue() {
+    public void ifOrElse_thenGetElseGet_returnthenGetValue_whenExpressionEvaluatesToTrue() {
 
         final Integer value = If.orElse(true, () -> 10, () -> 20);
 
@@ -599,7 +599,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifOrElse_returnFalseSupplierResult_whenExpressionEvaluatesToFalse() {
+    public void ifOrElse_thenGetElseGet_returnElseGetValue_whenExpressionEvaluatesToFalse() {
 
         final Integer value = If.orElse(false, () -> 10, () -> 20);
 
@@ -607,7 +607,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifOrElse_returnThenReturnValue_whenExpressionEvaluatesToTrue() {
+    public void ifOrElse_thenValueElseValue_returnThenValue_whenExpressionEvaluatesToTrue() {
 
         final Integer value = If.orElse(true, 10, 20);
 
@@ -615,7 +615,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifOrElse_returnElseReturnValue_whenExpressionEvaluatesToFalse() {
+    public void ifOrElse_thenValueElseValue_returnElseValue_returnElseReturnValue_whenExpressionEvaluatesToFalse() {
 
         final Integer value = If.orElse(false, 10, 20);
 
@@ -623,7 +623,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifOrElse_returnThenReturnValue_whenSupplierIsTrue() {
+    public void ifOrElse_thenValueElseValue_returnThenValue__whenSupplierIsTrue() {
 
         final Integer value = If.orElse(() -> true, 10, 20);
 
@@ -631,7 +631,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifOrElse_returnElseReturnValue_whenSupplierIsFalse() {
+    public void ifOrElse_thenValueElseValue_returnElseValue_whenSupplierIsFalse() {
 
         final Integer value = If.orElse(() -> false, 10, 20);
 
@@ -639,7 +639,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifOrElse_callTrueSupplier_whenExpressionEvaluatesToTrue() {
+    public void ifOrElse_thenCallElseCall_callThenCall_whenExpressionEvaluatesToTrue() {
         TestHelper testHelper = mock(TestHelper.class);
 
         If.orElse(true, testHelper::thenCallMe, testHelper::elseCallMe);
@@ -648,7 +648,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifOrElse_callFalseSupplierResult_whenExpressionEvaluatesToFalse() {
+    public void ifOrElse_thenCallElseCall_callElseCall_whenExpressionEvaluatesToFalse() {
         TestHelper testHelper = mock(TestHelper.class);
 
         If.orElse(false, testHelper::thenCallMe, testHelper::elseCallMe);
@@ -657,7 +657,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifTrue_callSupplier_whenExpressionEvaluatesToTrue() {
+    public void isTrueThen_callThenCall_whenExpressionEvaluatesToTrue() {
         TestHelper testHelper = mock(TestHelper.class);
 
         If.isTrueThen(true, testHelper::thenCallMe);
@@ -666,7 +666,7 @@ public class IfTest {
     }
 
     @Test
-    public void ifTrue_doesNotCallSupplier_whenExpressionEvaluatesToFalse() {
+    public void isTrueThen_thenCall_doNotCallSupplier_whenExpressionEvaluatesToFalse() {
         TestHelper testHelper = mock(TestHelper.class);
 
         If.isTrueThen(false, testHelper::thenCallMe);
