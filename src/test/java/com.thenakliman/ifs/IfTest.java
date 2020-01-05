@@ -380,6 +380,87 @@ public class IfTest {
     }
 
     @Test
+    public void isFalse_thenValueElseValue_returnThenValue_whenExpressionIsFalse() {
+        final Integer value = If.isFalse(false)
+                .thenValue(30)
+                .elseValue(31);
+        assertThat(value, is(30));
+    }
+
+    @Test
+    public void isFalse_thenValueElseValue_returnElseValue_whenExpressionIsTrue() {
+        final Integer value = If.isFalse(true)
+                .thenValue(30)
+                .elseValue(31);
+        assertThat(value, is(31));
+    }
+
+    @Test
+    public void isFalse_thenValueElseGet_returnThenValue_whenExpressionIsFalse() {
+        final Integer value = If.isFalse(false)
+                .thenValue(30)
+                .elseGet(() -> 31);
+        assertThat(value, is(30));
+    }
+
+    @Test
+    public void isFalsee_thenValueElseGet_returnElseValue_whenExpressionIsTrue() {
+        final Integer value = If.isFalse(true)
+                .thenValue(30)
+                .elseGet(() -> 31);
+        assertThat(value, is(31));
+    }
+
+    @Test
+    public void isFalse_thenValueElseThrow_returnThenValue_whenExpressionIsFalse() {
+        final Integer value = If.isFalse(false)
+                .thenValue(30)
+                .elseThrow(IllegalArgumentException::new);
+        assertThat(value, is(30));
+    }
+
+    @Test
+    public void isFalse_thenValueElseThrow_throwElseThrowException_whenExpressionIsTrue() {
+        expectedException.expect(IllegalArgumentException.class);
+        If.isFalse(true)
+                .thenValue(30)
+                .elseThrow(IllegalArgumentException::new);
+    }
+
+    @Test
+    public void isFalse_thenGetElseValue_returnElseValue_whenExpressionIsTrue() {
+        final Integer value = If.isFalse(true)
+                .thenGet(() -> 30)
+                .elseValue(31);
+        assertThat(value, is(31));
+    }
+
+    @Test
+    public void isFalse_thenGetElseValue_returnThenGetValue_whenExpressionIsFalse() {
+        final Integer value = If.isFalse(false)
+                .thenGet(() -> 30)
+                .elseValue(31);
+        assertThat(value, is(30));
+    }
+
+    @Test
+    public void isFalse_thenThrowElseValue_throwThenThrowException_whenExpressionIsFalse() {
+        expectedException.expect(IllegalArgumentException.class);
+        If.isFalse(false)
+                .thenThrow(IllegalArgumentException::new)
+                .elseValue(31);
+    }
+
+    @Test
+    public void isFalse_thenThrowElseValue_returnElseValue_whenExpressionIsTrue() {
+        final Integer value = If.isFalse(true)
+                .thenThrow(IllegalArgumentException::new)
+                .elseValue(31);
+
+        assertThat(value, is(31));
+    }
+
+    @Test
     public void isTrue_thenGetElseThrow_throwElseThrowException_whenExpressionIsFalse() {
         expectedException.expect(IllegalArgumentException.class);
         If.isTrue(false)
