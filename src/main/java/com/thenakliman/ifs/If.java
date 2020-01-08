@@ -9,7 +9,7 @@ final class If {
         // Not allowed to create instance
     }
 
-    public static <T> NullTernary.IThen<T> isNull(T value) {
+    public static <T> NullTernary.IThen<T> isNull(final T value) {
         if (Objects.isNull(value)) {
             return new NullTernary.NullThen<>();
         }
@@ -17,7 +17,7 @@ final class If {
         return new NullTernary.NonNullThen<>(value);
     }
 
-    public static IfExpression.IExpressionThen isTrue(Boolean expression) {
+    public static IfExpression.IExpressionThen isTrue(final Boolean expression) {
         if (expression) {
             return new IfExpression.TrueExpressionThen();
         }
@@ -25,7 +25,7 @@ final class If {
         return new IfExpression.FalseExpressionThen();
     }
 
-    public static IfExpression.IExpressionThen isFalse(Boolean expression) {
+    public static IfExpression.IExpressionThen isFalse(final Boolean expression) {
         if (!expression) {
             return new IfExpression.TrueExpressionThen();
         }
@@ -33,7 +33,7 @@ final class If {
         return new IfExpression.FalseExpressionThen();
     }
 
-    public static IfOnly.IExecute isTrueThen(Boolean expression) {
+    public static IfOnly.IExecute isTrueThen(final Boolean expression) {
         if (expression) {
             return new IfOnly.Execution();
         }
@@ -41,7 +41,7 @@ final class If {
         return new IfOnly.SkipExecution();
     }
 
-    public static IfOnly.IExecute isFalseThen(Boolean expression) {
+    public static IfOnly.IExecute isFalseThen(final Boolean expression) {
         if (expression) {
             return new IfOnly.SkipExecution();
         }
@@ -50,7 +50,9 @@ final class If {
     }
 
 
-    public static <T> T orElse(boolean expression, Supplier<T> ifSupplier, Supplier<T> elseSupplier) {
+    public static <T> T orElse(final boolean expression,
+                               final Supplier<T> ifSupplier,
+                               final Supplier<T> elseSupplier) {
         if (expression) {
             return ifSupplier.get();
         }
@@ -58,23 +60,37 @@ final class If {
         return elseSupplier.get();
     }
 
-    public static <T> T orElse(Supplier<Boolean> supplier, Supplier<T> ifSupplier, Supplier<T> elseSupplier) {
+    public static <T> T orElse(final Supplier<Boolean> supplier,
+                               final Supplier<T> ifSupplier,
+                               final Supplier<T> elseSupplier) {
+
         return orElse(supplier.get(), ifSupplier, elseSupplier);
     }
 
-    public static <T, R> R nullOrElse(T value, Supplier<R> ifSupplier, Supplier<R> elseSupplier) {
+    public static <T, R> R nullOrElse(final T value,
+                                      final Supplier<R> ifSupplier,
+                                      final Supplier<R> elseSupplier) {
+
         return orElse(Objects.isNull(value), ifSupplier, elseSupplier);
     }
 
-    public static <T, R> R nullOrElse(T value, Supplier<R> ifSupplier, Function<T, R> elseFunction) {
+    public static <T, R> R nullOrElse(final T value,
+                                      final Supplier<R> ifSupplier,
+                                      final Function<T, R> elseFunction) {
+
         return orElse(Objects.isNull(value), ifSupplier, () -> elseFunction.apply(value));
     }
 
-    public static void orElse(Supplier<Boolean> supplier, IfExpression.IProcedure ifProcessor, IfExpression.IProcedure elseProcessor) {
+    public static void orElse(final Supplier<Boolean> supplier,
+                              final IfExpression.IProcedure ifProcessor,
+                              final IfExpression.IProcedure elseProcessor) {
+
         orElse(supplier.get(), ifProcessor, elseProcessor);
     }
 
-    public static void orElse(boolean expression, IfExpression.IProcedure ifProcessor, IfExpression.IProcedure elseProcessor) {
+    public static void orElse(final boolean expression,
+                              final IfExpression.IProcedure ifProcessor,
+                              final IfExpression.IProcedure elseProcessor) {
         if (expression) {
             ifProcessor.call();
         }
@@ -82,25 +98,25 @@ final class If {
         elseProcessor.call();
     }
 
-    public static <T> T orElse(boolean expression, T thenValue, T elseValue) {
+    public static <T> T orElse(final boolean expression, final T thenValue, final T elseValue) {
         return orElse(expression, () -> thenValue, () -> elseValue);
     }
 
-    public static <T> T orElse(Supplier<Boolean> supplier, T thenValue, T elseValue) {
+    public static <T> T orElse(final Supplier<Boolean> supplier, final T thenValue, final T elseValue) {
         return orElse(supplier.get(), () -> thenValue, () -> elseValue);
     }
 
-    public static void isTrueThen(boolean expression, IfExpression.IProcedure ifProcessor) {
+    public static void isTrueThen(final boolean expression, final IfExpression.IProcedure ifProcessor) {
         if (expression) {
             ifProcessor.call();
         }
     }
 
-    public static void isTrueThen(Supplier<Boolean> supplier, IfExpression.IProcedure ifProcessor) {
+    public static void isTrueThen(final Supplier<Boolean> supplier, final IfExpression.IProcedure ifProcessor) {
         isTrueThen(supplier.get(), ifProcessor);
     }
 
-    public static <T> void isNullThen(T value, IfExpression.IProcedure ifProcessor) {
+    public static <T> void isNullThen(final T value, final IfExpression.IProcedure ifProcessor) {
         isTrueThen(Objects.isNull(value), ifProcessor);
     }
 }
