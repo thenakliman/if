@@ -7,7 +7,7 @@ class IfExpression {
         void call();
     }
 
-    interface IElseGet<T> {
+    interface IElse<T> {
         T elseGet(final Supplier<T> supplier);
 
         T elseValue(final T value);
@@ -21,18 +21,10 @@ class IfExpression {
         <X extends Throwable> void elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    interface IElseValue<T> {
-        T elseGet(final Supplier<T> supplier);
-
-        T elseValue(final T value);
-
-        <X extends Throwable> T elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
-    }
-
     interface IExpressionThen {
-        <T> IElseGet<T> thenGet(final Supplier<T> supplier);
+        <T> IElse<T> thenGet(final Supplier<T> supplier);
 
-        <T> IElseValue<T> thenValue(final T supplier);
+        <T> IElse<T> thenValue(final T supplier);
 
         IElseCall thenCall(final IProcedure procedure);
 
@@ -52,13 +44,13 @@ class IfExpression {
 
     static class TrueExpressionThen implements IExpressionThen {
         @Override
-        public <T> IElseGet<T> thenGet(final Supplier<T> supplier) {
-            return new TrueExpressionGet<>(supplier.get());
+        public <T> IElse<T> thenGet(final Supplier<T> supplier) {
+            return new TrueExpression<>(supplier.get());
         }
 
         @Override
-        public <T> IElseValue<T> thenValue(final T value) {
-            return new TrueElseValue<T>(value);
+        public <T> IElse<T> thenValue(final T value) {
+            return new TrueExpression<>(value);
         }
 
         @Override
@@ -70,39 +62,17 @@ class IfExpression {
         public <X extends Throwable> IExceptionElse thenThrow(final Supplier<? extends X> exceptionSupplier) throws X {
             throw exceptionSupplier.get();
         }
-
-        private static class TrueElseValue<T> implements IElseValue<T> {
-            final private T value;
-            public TrueElseValue(final T value) {
-                this.value = value;
-            }
-
-            @Override
-            public T elseGet(final Supplier<T> T) {
-                return this.value;
-            }
-
-            @Override
-            public T elseValue(final T value) {
-                return this.value;
-            }
-
-            @Override
-            public <X extends Throwable> T elseThrow(final Supplier<? extends X> exceptionSupplier) throws X {
-                return this.value;
-            }
-        }
     }
 
     static class FalseExpressionThen implements IExpressionThen {
         @Override
-        public <T> IElseGet<T> thenGet(final Supplier<T> supplier) {
-            return new FalseExpressionGet<>();
+        public <T> IElse<T> thenGet(final Supplier<T> supplier) {
+            return new FalseExpression<>();
         }
 
         @Override
-        public <T> IElseValue<T> thenValue(final T supplier) {
-            return new FalseElseValue<T>();
+        public <T> IElse<T> thenValue(final T supplier) {
+            return new FalseExpression<>();
         }
 
         @Override
@@ -112,22 +82,6 @@ class IfExpression {
 
         public <X extends Throwable> IExceptionElse thenThrow(final Supplier<? extends X> exceptionSupplier) throws X {
             return new ElseException();
-        }
-
-        private static class FalseElseValue<T> implements IElseValue<T> {
-            @Override
-            public T elseGet(final Supplier<T> supplier) {
-                return supplier.get();
-            }
-
-            @Override
-            public T elseValue(final T value) {
-                return value;
-            }
-
-            public <X extends Throwable> T elseThrow(final Supplier<? extends X> exceptionSupplier) throws X {
-                throw exceptionSupplier.get();
-            }
         }
     }
 
@@ -154,10 +108,10 @@ class IfExpression {
     }
 
 
-    static class TrueExpressionGet<T> implements IElseGet<T> {
+    static class TrueExpression<T> implements IElse<T> {
         final private T value;
 
-        TrueExpressionGet(final T value) {
+        TrueExpression(final T value) {
             this.value = value;
         }
 
@@ -177,7 +131,7 @@ class IfExpression {
         }
     }
 
-    static class FalseExpressionGet<T> implements IElseGet<T> {
+    static class FalseExpression<T> implements IElse<T> {
         @Override
         public T elseGet(final Supplier<T> supplier) {
             return supplier.get();
