@@ -1,4 +1,4 @@
-package com.thenakliman.ifs.nullHandler;
+package com.thenakliman.ifs;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 public final class NullTernary {
 
-    public interface IElse<T, R> {
+    interface IElse<T, R> {
         R elseValue(final R value);
 
         R elseMap(final Function<T, R> function);
@@ -14,7 +14,7 @@ public final class NullTernary {
         <X extends Throwable> R elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    public interface IExceptionHandler<T> {
+    interface IExceptionHandler<T> {
         <U> U elseValue(final U returnValue);
 
         <U> U elseMap(final Function<T, U> function);
@@ -22,7 +22,7 @@ public final class NullTernary {
         <X extends Throwable> void elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    public interface IThen<T> {
+    interface IThen<T> {
         <R> IElse<T, R> thenValue(final R returnValue);
 
         <R> IElse<T, R> thenGet(final Supplier<R> supplier);

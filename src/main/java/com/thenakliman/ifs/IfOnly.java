@@ -1,8 +1,6 @@
 package com.thenakliman.ifs;
 
 
-import com.thenakliman.ifs.expressionHandler.IfExpression;
-
 import java.util.function.Supplier;
 
 final class IfOnly {

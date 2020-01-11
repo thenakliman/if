@@ -1,13 +1,13 @@
-package com.thenakliman.ifs.expressionHandler;
+package com.thenakliman.ifs;
 
 import java.util.function.Supplier;
 
-public class IfExpression {
-    public interface Callable {
+class IfExpression {
+    interface Callable {
         void call();
     }
 
-    public interface IElseIf<T> {
+    interface IElseIf<T> {
         IElse<T> thenGet(final Supplier<T> supplier);
 
         IElse<T> thenValue(final T value);
@@ -15,7 +15,7 @@ public class IfExpression {
         <X extends Throwable> IElse<T> thenThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    public interface IIExceptionElseIf  {
+    interface IExceptionThrow {
         <T> T elseGet(final Supplier<T> supplier);
 
         <T> T elseValue(final T value);
@@ -25,15 +25,15 @@ public class IfExpression {
         <X extends Throwable> void elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    public interface IExceptionElseIf {
+    interface IExceptionElseIf {
         <T> IElse<T> thenGet(final Supplier<T> supplier);
 
         <T> IElse<T> thenValue(final T value);
 
-        <X extends Throwable> IIExceptionElseIf thenThrow(final Supplier<? extends X> exceptionSupplier) throws X;
+        <X extends Throwable> IExceptionThrow thenThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    public interface IElse<T> {
+    interface IElse<T> {
         T elseGet(final Supplier<T> supplier);
 
         T elseValue(final T value);
@@ -43,23 +43,23 @@ public class IfExpression {
         <X extends Throwable> T elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    public interface IElseCall {
+    interface IElseCall {
         void elseCall(final Callable callable);
 
         <X extends Throwable> void elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    public interface IExpressionThen {
+    interface IExpressionThen {
         <T> IElse<T> thenGet(final Supplier<T> supplier);
 
         <T> IElse<T> thenValue(final T supplier);
 
         IElseCall thenCall(final Callable callable);
 
-        <X extends Throwable> IExceptionElse thenThrow(final Supplier<? extends X> exceptionSupplier) throws X;
+        <X extends Throwable> IException thenThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    public interface IExceptionElse {
+    interface IException {
         void elseCall(final Callable callable);
 
         <T> T elseValue(final T value);
@@ -71,7 +71,7 @@ public class IfExpression {
         IExceptionElseIf elseIf(final boolean expression);
     }
 
-    public static class TrueExpressionThen implements IExpressionThen {
+    static class TrueExpressionThen implements IExpressionThen {
         @Override
         public <T> IElse<T> thenGet(final Supplier<T> supplier) {
             return new TrueExpression<>(supplier.get());
@@ -88,12 +88,12 @@ public class IfExpression {
             return new TrueExpressionCall();
         }
 
-        public <X extends Throwable> IExceptionElse thenThrow(final Supplier<? extends X> exceptionSupplier) throws X {
+        public <X extends Throwable> IException thenThrow(final Supplier<? extends X> exceptionSupplier) throws X {
             throw exceptionSupplier.get();
         }
     }
 
-    public static class FalseExpressionThen implements IExpressionThen {
+    static class FalseExpressionThen implements IExpressionThen {
         @Override
         public <T> IElse<T> thenGet(final Supplier<T> supplier) {
             return new FalseExpression<>();
@@ -109,12 +109,12 @@ public class IfExpression {
             return new FalseExpressionCall();
         }
 
-        public <X extends Throwable> IExceptionElse thenThrow(final Supplier<? extends X> exceptionSupplier) throws X {
+        public <X extends Throwable> IException thenThrow(final Supplier<? extends X> exceptionSupplier) throws X {
             return new ElseException();
         }
     }
 
-    private static class ElseException implements IExceptionElse {
+    private static class ElseException implements IException {
         @Override
         public void elseCall(final Callable callable) {
             callable.call();
@@ -156,11 +156,11 @@ public class IfExpression {
             }
 
             @Override
-            public <X extends Throwable> IIExceptionElseIf thenThrow(final Supplier<? extends X> exceptionSupplier) throws X {
-                return new IIExceptionFalseElseIfImpl();
+            public <X extends Throwable> IExceptionThrow thenThrow(final Supplier<? extends X> exceptionSupplier) throws X {
+                return new ExceptionThrow();
             }
 
-            private static class IIExceptionFalseElseIfImpl implements IIExceptionElseIf {
+            private static class ExceptionThrow implements IExceptionThrow {
                 @Override
                 public <T> T elseGet(final Supplier<T> supplier) {
                     return supplier.get();
@@ -199,7 +199,7 @@ public class IfExpression {
             }
 
             @Override
-            public <X extends Throwable> IIExceptionElseIf thenThrow(Supplier<? extends X> exceptionSupplier) throws X {
+            public <X extends Throwable> IExceptionThrow thenThrow(Supplier<? extends X> exceptionSupplier) throws X {
                 throw exceptionSupplier.get();
             }
         }
