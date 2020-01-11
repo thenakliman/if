@@ -30,6 +30,8 @@ class IfExpression {
 
         <T> IElse<T> thenValue(final T value);
 
+        <T> IElseCall thenCall(final Callable callable);
+
         <X extends Throwable> IExceptionThrow thenThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
@@ -43,10 +45,18 @@ class IfExpression {
         <X extends Throwable> T elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
+    interface IElseIfCall {
+        IElseCall thenCall(final Callable callable);
+
+        <X extends Throwable> IElseCall thenThrow(final Supplier<? extends X> exceptionSupplier) throws X;
+    }
+
     interface IElseCall {
         void elseCall(final Callable callable);
 
         <X extends Throwable> void elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
+
+        IElseIfCall elseIf(boolean expression);
     }
 
     interface IExpressionThen {
@@ -85,7 +95,7 @@ class IfExpression {
         @Override
         public IElseCall thenCall(final Callable callable) {
             callable.call();
-            return new TrueExpressionCall();
+            return new DoNothingObject();
         }
 
         public <X extends Throwable> IException thenThrow(final Supplier<? extends X> exceptionSupplier) throws X {
@@ -156,6 +166,11 @@ class IfExpression {
             }
 
             @Override
+            public <T> IElseCall thenCall(Callable callable) {
+                return new FalseExpressionCall();
+            }
+
+            @Override
             public <X extends Throwable> IExceptionThrow thenThrow(final Supplier<? extends X> exceptionSupplier) throws X {
                 return new ExceptionThrow();
             }
@@ -196,6 +211,12 @@ class IfExpression {
             @Override
             public <T> IElse<T> thenValue(T value) {
                 return new TrueExpression<>(value);
+            }
+
+            @Override
+            public <T> IElseCall thenCall(Callable callable) {
+                callable.call();
+                return new DoNothingObject();
             }
 
             @Override
@@ -316,7 +337,7 @@ class IfExpression {
         }
     }
 
-    private static class TrueExpressionCall implements IElseCall {
+    private static class DoNothingObject implements IElseCall {
         @Override
         public void elseCall(final Callable callable) {
             // does not anything
@@ -325,6 +346,22 @@ class IfExpression {
         @Override
         public <X extends Throwable> void elseThrow(final Supplier<? extends X> exceptionSupplier) throws X {
             // does not anything
+        }
+
+        @Override
+        public IElseIfCall elseIf(boolean expression) {
+            return new IElseIfCall() {
+
+                @Override
+                public IElseCall thenCall(Callable callable) {
+                    return new DoNothingObject();
+                }
+
+                @Override
+                public <X extends Throwable> IElseCall thenThrow(Supplier<? extends X> exceptionSupplier) throws X {
+                    return new DoNothingObject();
+                }
+            };
         }
     }
 
@@ -337,6 +374,40 @@ class IfExpression {
         @Override
         public <X extends Throwable> void elseThrow(final Supplier<? extends X> exceptionSupplier) throws X {
             throw exceptionSupplier.get();
+        }
+
+        @Override
+        public IElseIfCall elseIf(boolean expression) {
+            if (expression) {
+                return new TrueElseIfCall();
+            }
+
+            return new FalseElseIfCall();
+        }
+    }
+
+    private static class TrueElseIfCall implements IElseIfCall {
+        @Override
+        public IElseCall thenCall(Callable callable) {
+            callable.call();
+            return new DoNothingObject();
+        }
+
+        @Override
+        public <X extends Throwable> IElseCall thenThrow(final Supplier<? extends X> exceptionSupplier) throws X {
+            throw exceptionSupplier.get();
+        }
+    }
+
+    private static class FalseElseIfCall implements IElseIfCall {
+        @Override
+        public IElseCall thenCall(Callable callable) {
+            return new FalseExpressionCall();
+        }
+
+        @Override
+        public <X extends Throwable> IElseCall thenThrow(final Supplier<? extends X> exceptionSupplier) throws X {
+            return new FalseExpressionCall();
         }
     }
 }
