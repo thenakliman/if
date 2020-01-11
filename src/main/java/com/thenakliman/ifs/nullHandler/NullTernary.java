@@ -1,12 +1,12 @@
-package com.thenakliman.ifs;
+package com.thenakliman.ifs.nullHandler;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 
-final class NullTernary {
+public final class NullTernary {
 
-    interface IElse<T, R> {
+    public interface IElse<T, R> {
         R elseValue(final R value);
 
         R elseMap(final Function<T, R> function);
@@ -14,7 +14,7 @@ final class NullTernary {
         <X extends Throwable> R elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    interface IExceptionHandler<T> {
+    public interface IExceptionHandler<T> {
         <U> U elseValue(final U returnValue);
 
         <U> U elseMap(final Function<T, U> function);
@@ -22,7 +22,7 @@ final class NullTernary {
         <X extends Throwable> void elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    interface IThen<T> {
+    public interface IThen<T> {
         <R> IElse<T, R> thenValue(final R returnValue);
 
         <R> IElse<T, R> thenGet(final Supplier<R> supplier);
@@ -30,7 +30,7 @@ final class NullTernary {
         <X extends Throwable> IExceptionHandler<T> thenThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    static final class NullThen<T> implements IThen<T> {
+    public static final class NullThen<T> implements IThen<T> {
         public <R> IElse<T, R> thenValue(final R returnValue) {
             return new NullElse<>(returnValue);
         }
@@ -45,10 +45,10 @@ final class NullTernary {
         }
     }
 
-    static final class NonNullThen<T> implements IThen<T> {
+    public static final class NonNullThen<T> implements IThen<T> {
         private final T object;
 
-        NonNullThen(final T object) {
+        public NonNullThen(final T object) {
             this.object = object;
         }
 
@@ -65,7 +65,7 @@ final class NullTernary {
         }
     }
 
-    static final class NonNullExceptionHandler<T> implements IExceptionHandler<T> {
+    public static final class NonNullExceptionHandler<T> implements IExceptionHandler<T> {
         private final T object;
 
         NonNullExceptionHandler(final T object) {
@@ -87,7 +87,7 @@ final class NullTernary {
         }
     }
 
-    static final class NullElse<T, R> implements IElse<T, R> {
+    public static final class NullElse<T, R> implements IElse<T, R> {
         private final R returnValue;
 
         NullElse(final R returnValue) {
@@ -109,7 +109,7 @@ final class NullTernary {
         }
     }
 
-    static final class NonNullElse<T, R> implements IElse<T, R> {
+    public static final class NonNullElse<T, R> implements IElse<T, R> {
         private final T object;
 
         NonNullElse(final T object) {

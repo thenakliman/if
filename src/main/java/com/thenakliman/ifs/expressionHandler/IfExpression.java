@@ -1,13 +1,13 @@
-package com.thenakliman.ifs;
+package com.thenakliman.ifs.expressionHandler;
 
 import java.util.function.Supplier;
 
-class IfExpression {
+public class IfExpression {
     public interface IProcedure {
         void call();
     }
 
-    interface IValueElseIf<T> {
+    public interface IElseIf<T> {
         IElse<T> thenGet(final Supplier<T> supplier);
 
         IElse<T> thenValue(final T value);
@@ -15,7 +15,7 @@ class IfExpression {
         <X extends Throwable> IElse<T> thenThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    interface IIExceptionElseIf {
+    public interface IIExceptionElseIf  {
         <T> T elseGet(final Supplier<T> supplier);
 
         <T> T elseValue(final T value);
@@ -25,7 +25,7 @@ class IfExpression {
         <X extends Throwable> void elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    interface IExceptionElseIf {
+    public interface IExceptionElseIf {
         <T> IElse<T> thenGet(final Supplier<T> supplier);
 
         <T> IElse<T> thenValue(final T value);
@@ -33,23 +33,23 @@ class IfExpression {
         <X extends Throwable> IIExceptionElseIf thenThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    interface IElse<T> {
+    public interface IElse<T> {
         T elseGet(final Supplier<T> supplier);
 
         T elseValue(final T value);
 
-        IValueElseIf<T> elseIf(final boolean expression);
+        IElseIf<T> elseIf(final boolean expression);
 
         <X extends Throwable> T elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    interface IElseCall {
+    public interface IElseCall {
         void elseCall(final IProcedure procedure);
 
         <X extends Throwable> void elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    interface IExpressionThen {
+    public interface IExpressionThen {
         <T> IElse<T> thenGet(final Supplier<T> supplier);
 
         <T> IElse<T> thenValue(final T supplier);
@@ -59,7 +59,7 @@ class IfExpression {
         <X extends Throwable> IExceptionElse thenThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    interface IExceptionElse {
+    public interface IExceptionElse {
         void elseCall(final IProcedure procedure);
 
         <T> T elseValue(final T value);
@@ -71,8 +71,7 @@ class IfExpression {
         IExceptionElseIf elseIf(final boolean expression);
     }
 
-
-    static class TrueExpressionThen implements IExpressionThen {
+    public static class TrueExpressionThen implements IExpressionThen {
         @Override
         public <T> IElse<T> thenGet(final Supplier<T> supplier) {
             return new TrueExpression<>(supplier.get());
@@ -94,7 +93,7 @@ class IfExpression {
         }
     }
 
-    static class FalseExpressionThen implements IExpressionThen {
+    public static class FalseExpressionThen implements IExpressionThen {
         @Override
         public <T> IElse<T> thenGet(final Supplier<T> supplier) {
             return new FalseExpression<>();
@@ -206,8 +205,7 @@ class IfExpression {
         }
     }
 
-
-    static class TrueExpression<T> implements IElse<T> {
+    private static class TrueExpression<T> implements IElse<T> {
         final private T value;
 
         TrueExpression(final T value) {
@@ -225,8 +223,8 @@ class IfExpression {
         }
 
         @Override
-        public IValueElseIf<T> elseIf(final boolean expression) {
-            return new ValueObject<>(this.value);
+        public IElseIf<T> elseIf(final boolean expression) {
+            return new ElseIf<>(this.value);
         }
 
         @Override
@@ -234,10 +232,10 @@ class IfExpression {
             return this.value;
         }
 
-        private static class ValueObject<T> implements IValueElseIf<T> {
+        private static class ElseIf<T> implements IElseIf<T> {
             final private T value;
 
-            public ValueObject(final T value) {
+            public ElseIf(final T value) {
                 this.value = value;
             }
 
@@ -258,7 +256,7 @@ class IfExpression {
         }
     }
 
-    static class FalseExpression<T> implements IElse<T> {
+    private static class FalseExpression<T> implements IElse<T> {
         @Override
         public T elseGet(final Supplier<T> supplier) {
             return supplier.get();
@@ -270,12 +268,12 @@ class IfExpression {
         }
 
         @Override
-        public IValueElseIf<T> elseIf(final boolean expression) {
+        public IElseIf<T> elseIf(final boolean expression) {
             if (expression) {
-                return new NoValueTrueObject<>();
+                return new TrueElseIf<>();
             }
 
-            return new FalseValueObject<>();
+            return new FalseElseIf<>();
         }
 
         @Override
@@ -283,7 +281,7 @@ class IfExpression {
             throw exceptionSupplier.get();
         }
 
-        private static class NoValueTrueObject<T> implements IValueElseIf<T> {
+        private static class TrueElseIf<T> implements IElseIf<T> {
             @Override
             public IElse<T> thenGet(final Supplier<T> supplier) {
                 return new TrueExpression<>(supplier.get());
@@ -300,7 +298,7 @@ class IfExpression {
             }
         }
 
-        private static class FalseValueObject<T> implements IValueElseIf<T> {
+        private static class FalseElseIf<T> implements IElseIf<T> {
             @Override
             public IElse<T> thenGet(final Supplier<T> supplier) {
                 return new FalseExpression<>();
@@ -318,7 +316,7 @@ class IfExpression {
         }
     }
 
-    static class TrueExpressionCall implements IElseCall {
+    private static class TrueExpressionCall implements IElseCall {
         @Override
         public void elseCall(final IProcedure procedure) {
             // does not anything
@@ -330,7 +328,7 @@ class IfExpression {
         }
     }
 
-    static class FalseExpressionCall implements IElseCall {
+    private static class FalseExpressionCall implements IElseCall {
         @Override
         public void elseCall(final IProcedure procedure) {
             procedure.call();
