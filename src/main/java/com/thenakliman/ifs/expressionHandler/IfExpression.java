@@ -3,7 +3,7 @@ package com.thenakliman.ifs.expressionHandler;
 import java.util.function.Supplier;
 
 public class IfExpression {
-    public interface IProcedure {
+    public interface Callable {
         void call();
     }
 
@@ -44,7 +44,7 @@ public class IfExpression {
     }
 
     public interface IElseCall {
-        void elseCall(final IProcedure procedure);
+        void elseCall(final Callable callable);
 
         <X extends Throwable> void elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
@@ -54,13 +54,13 @@ public class IfExpression {
 
         <T> IElse<T> thenValue(final T supplier);
 
-        IElseCall thenCall(final IProcedure procedure);
+        IElseCall thenCall(final Callable callable);
 
         <X extends Throwable> IExceptionElse thenThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
     public interface IExceptionElse {
-        void elseCall(final IProcedure procedure);
+        void elseCall(final Callable callable);
 
         <T> T elseValue(final T value);
 
@@ -83,8 +83,8 @@ public class IfExpression {
         }
 
         @Override
-        public IElseCall thenCall(final IProcedure procedure) {
-            procedure.call();
+        public IElseCall thenCall(final Callable callable) {
+            callable.call();
             return new TrueExpressionCall();
         }
 
@@ -105,7 +105,7 @@ public class IfExpression {
         }
 
         @Override
-        public IElseCall thenCall(final IProcedure procedure) {
+        public IElseCall thenCall(final Callable callable) {
             return new FalseExpressionCall();
         }
 
@@ -116,8 +116,8 @@ public class IfExpression {
 
     private static class ElseException implements IExceptionElse {
         @Override
-        public void elseCall(final IProcedure procedure) {
-            procedure.call();
+        public void elseCall(final Callable callable) {
+            callable.call();
         }
 
         @Override
@@ -318,7 +318,7 @@ public class IfExpression {
 
     private static class TrueExpressionCall implements IElseCall {
         @Override
-        public void elseCall(final IProcedure procedure) {
+        public void elseCall(final Callable callable) {
             // does not anything
         }
 
@@ -330,8 +330,8 @@ public class IfExpression {
 
     private static class FalseExpressionCall implements IElseCall {
         @Override
-        public void elseCall(final IProcedure procedure) {
-            procedure.call();
+        public void elseCall(final Callable callable) {
+            callable.call();
         }
 
         @Override

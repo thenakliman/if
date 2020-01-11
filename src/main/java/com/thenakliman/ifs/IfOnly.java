@@ -8,14 +8,14 @@ import java.util.function.Supplier;
 final class IfOnly {
 
     public interface IExecute {
-        void thenCall(final IfExpression.IProcedure procedure);
+        void thenCall(final IfExpression.Callable callable);
 
         <X extends Throwable> void thenThrow(final Supplier<? extends X> exceptionSupplier) throws X;
     }
 
     public static class Execution implements IExecute {
-        public void thenCall(final IfExpression.IProcedure procedure) {
-            procedure.call();
+        public void thenCall(final IfExpression.Callable callable) {
+            callable.call();
         }
 
         public <X extends Throwable> void thenThrow(final Supplier<? extends X> exceptionSupplier) throws X {
@@ -24,7 +24,7 @@ final class IfOnly {
     }
 
     public static class SkipExecution implements IExecute {
-        public void thenCall(final IfExpression.IProcedure procedure) {
+        public void thenCall(final IfExpression.Callable callable) {
             // do not call
         }
 

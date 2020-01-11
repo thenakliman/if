@@ -85,20 +85,20 @@ final class If {
     }
 
     public static void orElse(final Supplier<Boolean> supplier,
-                              final IfExpression.IProcedure ifProcessor,
-                              final IfExpression.IProcedure elseProcessor) {
+                              final IfExpression.Callable ifCallable,
+                              final IfExpression.Callable elseCallable) {
 
-        orElse(supplier.get(), ifProcessor, elseProcessor);
+        orElse(supplier.get(), ifCallable, elseCallable);
     }
 
     public static void orElse(final boolean expression,
-                              final IfExpression.IProcedure ifProcessor,
-                              final IfExpression.IProcedure elseProcessor) {
+                              final IfExpression.Callable ifCallable,
+                              final IfExpression.Callable elseCallable) {
         if (expression) {
-            ifProcessor.call();
+            ifCallable.call();
         }
 
-        elseProcessor.call();
+        elseCallable.call();
     }
 
     public static <T> T orElse(final boolean expression, final T thenValue, final T elseValue) {
@@ -109,17 +109,17 @@ final class If {
         return orElse(supplier.get(), () -> thenValue, () -> elseValue);
     }
 
-    public static void isTrueThen(final boolean expression, final IfExpression.IProcedure ifProcessor) {
+    public static void isTrueThen(final boolean expression, final IfExpression.Callable ifCallable) {
         if (expression) {
-            ifProcessor.call();
+            ifCallable.call();
         }
     }
 
-    public static void isTrueThen(final Supplier<Boolean> supplier, final IfExpression.IProcedure ifProcessor) {
-        isTrueThen(supplier.get(), ifProcessor);
+    public static void isTrueThen(final Supplier<Boolean> supplier, final IfExpression.Callable ifCallable) {
+        isTrueThen(supplier.get(), ifCallable);
     }
 
-    public static <T> void isNullThen(final T value, final IfExpression.IProcedure ifProcessor) {
-        isTrueThen(Objects.isNull(value), ifProcessor);
+    public static <T> void isNullThen(final T value, final IfExpression.Callable ifCallable) {
+        isTrueThen(Objects.isNull(value), ifCallable);
     }
 }

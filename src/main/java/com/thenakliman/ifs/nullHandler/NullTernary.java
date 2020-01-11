@@ -65,7 +65,7 @@ public final class NullTernary {
         }
     }
 
-    public static final class NonNullExceptionHandler<T> implements IExceptionHandler<T> {
+    private static final class NonNullExceptionHandler<T> implements IExceptionHandler<T> {
         private final T object;
 
         NonNullExceptionHandler(final T object) {
@@ -87,7 +87,7 @@ public final class NullTernary {
         }
     }
 
-    public static final class NullElse<T, R> implements IElse<T, R> {
+    private static final class NullElse<T, R> implements IElse<T, R> {
         private final R returnValue;
 
         NullElse(final R returnValue) {
@@ -109,7 +109,7 @@ public final class NullTernary {
         }
     }
 
-    public static final class NonNullElse<T, R> implements IElse<T, R> {
+    private static final class NonNullElse<T, R> implements IElse<T, R> {
         private final T object;
 
         NonNullElse(final T object) {
