@@ -7,7 +7,45 @@ class IfExpression {
         void call();
     }
 
+    interface IValueElseIf<T> {
+        IElseIf<T> thenGet(final Supplier<T> supplier);
+
+        IElseIf<T> thenValue(final T value);
+
+        <X extends Throwable> IElseIf<T> thenThrow(final Supplier<? extends X> exceptionSupplier) throws X;
+    }
+
+    interface IIExceptionElseIf {
+        <T> T elseGet(final Supplier<T> supplier);
+
+        <T> T elseValue(final T value);
+
+        IExceptionElseIf elseIf(final boolean expression);
+
+        <X extends Throwable> void elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
+    }
+
+    interface IExceptionElseIf {
+        <T> IElseIf<T> thenGet(final Supplier<T> supplier);
+
+        <T> IElseIf<T> thenValue(final T value);
+
+        <X extends Throwable> IIExceptionElseIf thenThrow(final Supplier<? extends X> exceptionSupplier) throws X;
+    }
+
     interface IElse<T> {
+        T elseGet(final Supplier<T> supplier);
+
+        T elseValue(final T value);
+
+        IValueElseIf<T> elseIf(final boolean expression);
+
+        <X extends Throwable> T elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
+    }
+
+    interface IElseIf<T> {
+        IValueElseIf<T> elseIf(final boolean expression);
+
         T elseGet(final Supplier<T> supplier);
 
         T elseValue(final T value);
@@ -39,6 +77,8 @@ class IfExpression {
         <X extends Throwable> void elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
 
         <T> T elseGet(final Supplier<T> supplier);
+
+        IExceptionElseIf elseIf(final boolean expression);
     }
 
 
@@ -105,6 +145,75 @@ class IfExpression {
         public <T> T elseGet(final Supplier<T> supplier) {
             return supplier.get();
         }
+
+        @Override
+        public IExceptionElseIf elseIf(final boolean expression) {
+            if (expression) {
+                return new IExceptionTrueElseIfImpl();
+            }
+
+            return new IExceptionFalseElseIfImpl();
+        }
+
+        private static class IExceptionFalseElseIfImpl implements IExceptionElseIf {
+            @Override
+            public <T> IElseIf<T> thenGet(final Supplier<T> supplier) {
+                return new FalseElseIf<>();
+            }
+
+            @Override
+            public <T> IElseIf<T> thenValue(final T value) {
+                return new FalseElseIf<>();
+            }
+
+            @Override
+            public <X extends Throwable> IIExceptionElseIf thenThrow(final Supplier<? extends X> exceptionSupplier) throws X {
+                return new IIExceptionFalseElseIfImpl();
+            }
+
+            private static class IIExceptionFalseElseIfImpl implements IIExceptionElseIf {
+                @Override
+                public <T> T elseGet(final Supplier<T> supplier) {
+                    return supplier.get();
+                }
+
+                @Override
+                public <T> T elseValue(final T value) {
+                    return value;
+                }
+
+                @Override
+                public IExceptionElseIf elseIf(final boolean expression) {
+                    if(expression) {
+                        return new IExceptionTrueElseIfImpl();
+                    }
+
+                    return new IExceptionFalseElseIfImpl();
+                }
+
+                @Override
+                public <Y extends Throwable> void elseThrow(final Supplier<? extends Y> exceptionSupplier) throws Y {
+                    throw exceptionSupplier.get();
+                }
+            }
+        }
+
+        private static class IExceptionTrueElseIfImpl implements IExceptionElseIf {
+            @Override
+            public <T> IElseIf<T> thenGet(Supplier<T> supplier) {
+                return new TrueElseIf<>(supplier.get());
+            }
+
+            @Override
+            public <T> IElseIf<T> thenValue(T value) {
+                return new TrueElseIf<>(value);
+            }
+
+            @Override
+            public <X extends Throwable> IIExceptionElseIf thenThrow(Supplier<? extends X> exceptionSupplier) throws X {
+                throw exceptionSupplier.get();
+            }
+        }
     }
 
 
@@ -126,8 +235,90 @@ class IfExpression {
         }
 
         @Override
+        public IValueElseIf<T> elseIf(final boolean expression) {
+            return new ValueObject<>(this.value);
+        }
+
+        @Override
         public <X extends Throwable> T elseThrow(final Supplier<? extends X> exceptionSupplier) throws X {
             return this.value;
+        }
+
+        private static class ValueObject<T> implements IValueElseIf<T> {
+            final private T value;
+
+            public ValueObject(final T value) {
+                this.value = value;
+            }
+
+            @Override
+            public IElseIf<T> thenGet(final Supplier<T> supplier) {
+                return new TrueElseIf<>(this.value);
+            }
+
+            @Override
+            public IElseIf<T> thenValue(final T value) {
+                return new TrueElseIf<>(this.value);
+            }
+
+            @Override
+            public <X extends Throwable> IElseIf<T> thenThrow(final Supplier<? extends X> exceptionSupplier) throws X {
+                throw exceptionSupplier.get();
+            }
+        }
+    }
+
+    public static class TrueElseIf<T> implements IElseIf<T> {
+        final private T value;
+
+        public TrueElseIf(final T value) {
+            this.value = value;
+        }
+
+        @Override
+        public IValueElseIf<T> elseIf(final boolean expression) {
+            return new TrueExpression.ValueObject<>(this.value);
+        }
+
+        @Override
+        public T elseGet(final Supplier<T> supplier) {
+            return this.value;
+        }
+
+        @Override
+        public T elseValue(final T value) {
+            return this.value;
+        }
+
+        @Override
+        public <X extends Throwable> T elseThrow(final Supplier<? extends X> exceptionSupplier) throws X {
+            return this.value;
+        }
+    }
+
+    public static class FalseElseIf<T> implements IElseIf<T> {
+        @Override
+        public IValueElseIf<T> elseIf(final boolean expression) {
+            if (expression) {
+                return new FalseExpression.NoValueTrueObject<>();
+            }
+
+            return new FalseExpression.FalseValueObject<>();
+        }
+
+        @Override
+        public T elseGet(final Supplier<T> supplier) {
+            return supplier.get();
+        }
+
+        @Override
+        public T elseValue(final T value) {
+            return value;
+        }
+
+        @Override
+        public <X extends Throwable> T elseThrow(final Supplier<? extends X> exceptionSupplier) throws X {
+            throw exceptionSupplier.get();
         }
     }
 
@@ -143,8 +334,51 @@ class IfExpression {
         }
 
         @Override
+        public IValueElseIf<T> elseIf(final boolean expression) {
+            if (expression) {
+                return new NoValueTrueObject<>();
+            }
+
+            return new FalseValueObject<>();
+        }
+
+        @Override
         public <X extends Throwable> T elseThrow(final Supplier<? extends X> exceptionSupplier) throws X {
             throw exceptionSupplier.get();
+        }
+
+        private static class NoValueTrueObject<T> implements IValueElseIf<T> {
+            @Override
+            public IElseIf<T> thenGet(final Supplier<T> supplier) {
+                return new TrueElseIf<>(supplier.get());
+            }
+
+            @Override
+            public IElseIf<T> thenValue(final T value) {
+                return new TrueElseIf<>(value);
+            }
+
+            @Override
+            public <X extends Throwable> IElseIf<T> thenThrow(final Supplier<? extends X> exceptionSupplier) throws X {
+                throw exceptionSupplier.get();
+            }
+        }
+
+        private static class FalseValueObject<T> implements IValueElseIf<T> {
+            @Override
+            public IElseIf<T> thenGet(final Supplier<T> supplier) {
+                return new FalseElseIf<>();
+            }
+
+            @Override
+            public IElseIf<T> thenValue(final T value) {
+                return new FalseElseIf<>();
+            }
+
+            @Override
+            public <X extends Throwable> IElseIf<T> thenThrow(final Supplier<? extends X> exceptionSupplier) throws X {
+                return new FalseElseIf<>();
+            }
         }
     }
 

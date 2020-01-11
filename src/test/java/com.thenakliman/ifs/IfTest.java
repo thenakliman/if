@@ -191,6 +191,572 @@ public class IfTest {
     }
 
     @Test
+    public void isTrue_thenGetElseIfThenGet_returnFirstThenGetValue() {
+        Integer value = If.isTrue(true)
+                .thenGet(() -> 10)
+                .elseIf(false)
+                .thenGet(() -> 20)
+                .elseGet(() -> 30);
+
+        assertThat(value, is(10));
+    }
+
+    @Test
+    public void isTrue_thenGetElseIfThenGet_returnSecondThenGetValue() {
+        Integer value = If.isTrue(false)
+                .thenGet(() -> 10)
+                .elseIf(true)
+                .thenGet(() -> 20)
+                .elseGet(() -> 30);
+
+        assertThat(value, is(20));
+    }
+
+    @Test
+    public void isTrue_thenGetElseIfThenGet_returnThirdThenGetValue() {
+        Integer value = If.isTrue(false)
+                .thenGet(() -> 10)
+                .elseIf(false)
+                .thenGet(() -> 20)
+                .elseIf(true)
+                .thenGet(() -> 30)
+                .elseGet(() -> 40);
+
+        assertThat(value, is(30));
+    }
+
+    @Test
+    public void isTrue_thenGetElseIfThenGet_returnElseGetValue() {
+        Integer value = If.isTrue(false)
+                .thenGet(() -> 10)
+                .elseIf(false)
+                .thenGet(() -> 20)
+                .elseIf(false)
+                .thenGet(() -> 30)
+                .elseGet(() -> 40);
+
+        assertThat(value, is(40));
+    }
+
+    @Test
+    public void isTrue_thenValueElseIfThenValue_returnFirstThenValue() {
+        Integer value = If.isTrue(true)
+                .thenValue(10)
+                .elseIf(false)
+                .thenValue(20)
+                .elseValue(30);
+
+        assertThat(value, is(10));
+    }
+
+    @Test
+    public void isTrue_thenValueElseIfThenValue_returnSecondThenValue() {
+        Integer value = If.isTrue(false)
+                .thenValue(10)
+                .elseIf(true)
+                .thenValue(20)
+                .elseValue(30);
+
+        assertThat(value, is(20));
+    }
+
+    @Test
+    public void isTrue_thenValueElseIfThenValue_returnThirdThenValue() {
+        Integer value = If.isTrue(false)
+                .thenValue(10)
+                .elseIf(false)
+                .thenValue(20)
+                .elseIf(true)
+                .thenValue(30)
+                .elseValue(40);
+
+        assertThat(value, is(30));
+    }
+
+    @Test
+    public void isTrue_thenValueElseIfThenValue_returnElseValue() {
+        Integer value = If.isTrue(false)
+                .thenValue(10)
+                .elseIf(false)
+                .thenValue(20)
+                .elseIf(false)
+                .thenValue(30)
+                .elseValue(40);
+
+        assertThat(value, is(40));
+    }
+
+    @Test
+    public void isTrue_thenValueElseIfThenGet_returnFirstThenValue() {
+        Integer value = If.isTrue(true)
+                .thenValue(10)
+                .elseIf(false)
+                .thenGet(() -> 20)
+                .elseIf(false)
+                .thenValue(30)
+                .elseGet(() -> 40);
+
+        assertThat(value, is(10));
+    }
+
+    @Test
+    public void isTrue_thenValueElseIfThenGet_returnSecondThenValue() {
+        Integer value = If.isTrue(false)
+                .thenValue(10)
+                .elseIf(false)
+                .thenGet(() -> 20)
+                .elseIf(true)
+                .thenValue(30)
+                .elseGet(() -> 40);
+
+        assertThat(value, is(30));
+    }
+
+    @Test
+    public void isTrue_thenValueElseIfThenGet_returnFirstGetValue() {
+        Integer value = If.isTrue(false)
+                .thenValue(10)
+                .elseIf(true)
+                .thenGet(() -> 20)
+                .elseIf(true)
+                .thenValue(30)
+                .elseGet(() -> 40);
+
+        assertThat(value, is(20));
+    }
+
+    @Test
+    public void isTrue_thenValueElseIfThenGet_returnEleGetValue() {
+        Integer value = If.isTrue(false)
+                .thenValue(10)
+                .elseIf(false)
+                .thenGet(() -> 20)
+                .elseIf(false)
+                .thenValue(30)
+                .elseGet(() -> 40);
+
+        assertThat(value, is(40));
+    }
+
+    @Test
+    public void isTrue_thenThrowElseIfThenThrow_throwThenThrow() {
+        expectedException.expectMessage("some");
+        expectedException.expect(IllegalArgumentException.class);
+        If.isTrue(true)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(false)
+                .thenValue(10)
+                .elseValue(20);
+    }
+
+    @Test
+    public void isTrue_thenThrowElseIfThenValueElseValue_returnThenValue() {
+        Integer some = If.isTrue(false)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(true)
+                .thenValue(10)
+                .elseValue(20);
+
+        assertThat(some, is(10));
+    }
+
+    @Test
+    public void isTrue_thenThrowElseIfThenValueElseValue_returnElseValue() {
+        Integer some = If.isTrue(false)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(false)
+                .thenValue(10)
+                .elseValue(20);
+
+        assertThat(some, is(20));
+    }
+
+    @Test
+    public void isTrue_thenThrowElseIfThenValueThenValueElseValue_returnSecondThenValue() {
+        Integer some = If.isTrue(false)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(false)
+                .thenValue(10)
+                .elseIf(true)
+                .thenValue(20)
+                .elseValue(30);
+
+        assertThat(some, is(20));
+    }
+
+    @Test
+    public void isTrue_thenThrowElseIfThenValueThenValueElseValue_returnElseValue() {
+        Integer some = If.isTrue(false)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(false)
+                .thenValue(10)
+                .elseIf(false)
+                .thenValue(20)
+                .elseValue(30);
+
+        assertThat(some, is(30));
+    }
+
+    @Test
+    public void isTrue_thenThrowElseIfThenValueThenValueThenValueElseValue_return3rdThenValue() {
+        Integer some = If.isTrue(false)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(false)
+                .thenValue(10)
+                .elseIf(false)
+                .thenValue(20)
+                .elseIf(true)
+                .thenValue(30)
+                .elseValue(40);
+
+        assertThat(some, is(30));
+    }
+
+    @Test
+    public void isTrue_thenThrowElseIfThenValueThenValueThenValueElseValue_returnElseValue() {
+        Integer some = If.isTrue(false)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(false)
+                .thenValue(10)
+                .elseIf(false)
+                .thenValue(20)
+                .elseIf(false)
+                .thenValue(30)
+                .elseValue(40);
+
+        assertThat(some, is(40));
+    }
+
+    @Test
+    public void isTrue_thenThrowElseIfThenValueThenValueThenValueElseValue_throwException() {
+        expectedException.expectMessage("some");
+        expectedException.expect(IllegalArgumentException.class);
+        If.isTrue(true)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(false)
+                .thenValue(10)
+                .elseIf(false)
+                .thenValue(20)
+                .elseIf(true)
+                .thenValue(30)
+                .elseValue(40);
+    }
+
+    @Test
+    public void isTrue_thenValueElseIfThrowThenValueThenValueElseValue_throwException() {
+        expectedException.expectMessage("some");
+        expectedException.expect(IllegalArgumentException.class);
+        If.isTrue(false)
+                .thenValue(10)
+                .elseIf(true)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(false)
+                .thenValue(20)
+                .elseIf(true)
+                .thenValue(30)
+                .elseValue(40);
+    }
+
+    @Test
+    public void isTrue_thenValueThenValueElseIfThrowThenValueElseValue_throwException() {
+        expectedException.expectMessage("some");
+        expectedException.expect(IllegalArgumentException.class);
+        If.isTrue(false)
+                .thenValue(10)
+                .elseIf(false)
+                .thenValue(20)
+                .elseIf(true)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(true)
+                .thenValue(30)
+                .elseValue(40);
+    }
+
+    @Test
+    public void isTrue_thenValueThenValueThenValueElseIfThrowElseValue_throwException() {
+        expectedException.expectMessage("some");
+        expectedException.expect(IllegalArgumentException.class);
+        If.isTrue(false)
+                .thenValue(10)
+                .elseIf(false)
+                .thenValue(20)
+                .elseIf(false)
+                .thenValue(30)
+                .elseIf(true)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseValue(40);
+    }
+
+    @Test
+    public void isTrue_thenValueThenValueThenValueThenValueElseThrow_throwException() {
+        expectedException.expectMessage("some");
+        expectedException.expect(IllegalArgumentException.class);
+        If.isTrue(false)
+                .thenValue(10)
+                .elseIf(false)
+                .thenValue(20)
+                .elseIf(false)
+                .thenValue(30)
+                .elseIf(false)
+                .thenValue(40)
+                .elseThrow(() -> new IllegalArgumentException("some"));
+    }
+
+    @Test
+    public void isTrue_thenGetThenGetThenGetThenGetElseThrow_throwException() {
+        expectedException.expectMessage("some");
+        expectedException.expect(IllegalArgumentException.class);
+        If.isTrue(false)
+                .thenGet(() -> 10)
+                .elseIf(false)
+                .thenGet(() -> 20)
+                .elseIf(false)
+                .thenGet(() -> 30)
+                .elseIf(false)
+                .thenGet(() -> 40)
+                .elseThrow(() -> new IllegalArgumentException("some"));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenGetThenGetThenGetElseGet_throwException() {
+        expectedException.expectMessage("some");
+        expectedException.expect(IllegalArgumentException.class);
+        If.isTrue(true)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(false)
+                .thenGet(() -> 20)
+                .elseIf(true)
+                .thenGet(() -> 30)
+                .elseIf(true)
+                .thenGet(() -> 40)
+                .elseGet(() -> 50);
+    }
+
+    @Test
+    public void isTrue_thenGetThenGetThenThrowThenGetElseGet_throwException() {
+        expectedException.expectMessage("some");
+        expectedException.expect(IllegalArgumentException.class);
+        If.isTrue(false)
+                .thenGet(() -> 10)
+                .elseIf(false)
+                .thenGet(() -> 20)
+                .elseIf(true)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(true)
+                .thenGet(() -> 40)
+                .elseGet(() -> 50);
+    }
+
+    @Test
+    public void isTrue_thenGetThenGetThenThrowThenGetElseThrow_throwException() {
+        expectedException.expectMessage("0000");
+        expectedException.expect(RuntimeException.class);
+        If.isTrue(false)
+                .thenGet(() -> 10)
+                .elseIf(false)
+                .thenGet(() -> 20)
+                .elseIf(false)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(false)
+                .thenGet(() -> 40)
+                .elseThrow(() -> new RuntimeException("0000"));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenGetThenThrowThenGetElseThrow_throwException() {
+        expectedException.expectMessage("11111");
+        expectedException.expect(IllegalAccessError.class);
+        If.isTrue(true)
+                .thenThrow(() -> new IllegalAccessError("11111"))
+                .elseIf(true)
+                .thenGet(() -> 20)
+                .elseIf(true)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(true)
+                .thenGet(() -> 40)
+                .elseThrow(() -> new RuntimeException("0000"));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenThrowThenThrowElseThrow_throwFirstException() {
+        expectedException.expectMessage("11111");
+        expectedException.expect(IllegalAccessError.class);
+        If.isTrue(true)
+                .thenThrow(() -> new IllegalAccessError("11111"))
+                .elseIf(true)
+                .thenThrow(() -> new IllegalCallerException("22222"))
+                .elseIf(true)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(true)
+                .thenThrow(() -> new IllegalMonitorStateException("123423"))
+                .elseThrow(() -> new RuntimeException("0000"));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenThrowThenThrowElseThrow_throwSecondException() {
+        expectedException.expectMessage("22222");
+        expectedException.expect(IllegalCallerException.class);
+        If.isTrue(false)
+                .thenThrow(() -> new IllegalAccessError("11111"))
+                .elseIf(true)
+                .thenThrow(() -> new IllegalCallerException("22222"))
+                .elseIf(true)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(true)
+                .thenThrow(() -> new IllegalMonitorStateException("123423"))
+                .elseThrow(() -> new RuntimeException("0000"));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenThrowThenThrowElseThrow_throwThirdException() {
+        expectedException.expectMessage("some");
+        expectedException.expect(IllegalArgumentException.class);
+        If.isTrue(false)
+                .thenThrow(() -> new IllegalAccessError("11111"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalCallerException("22222"))
+                .elseIf(true)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(true)
+                .thenThrow(() -> new IllegalMonitorStateException("123423"))
+                .elseThrow(() -> new RuntimeException("0000"));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenThrowThenThrowElseThrow_throwFourthException() {
+        expectedException.expectMessage("123423");
+        expectedException.expect(IllegalMonitorStateException.class);
+        If.isTrue(false)
+                .thenThrow(() -> new IllegalAccessError("11111"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalCallerException("22222"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(true)
+                .thenThrow(() -> new IllegalMonitorStateException("123423"))
+                .elseThrow(() -> new RuntimeException("0000"));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenThrowThenThrowElseThrow_throwElseException() {
+        expectedException.expectMessage("0000");
+        expectedException.expect(RuntimeException.class);
+        If.isTrue(false)
+                .thenThrow(() -> new IllegalAccessError("11111"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalCallerException("22222"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalMonitorStateException("123423"))
+                .elseThrow(() -> new RuntimeException("0000"));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenThrowThenValueElseThrow_throwElseException() {
+        expectedException.expectMessage("0000");
+        expectedException.expect(RuntimeException.class);
+        If.isTrue(false)
+                .thenThrow(() -> new IllegalAccessError("11111"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalCallerException("22222"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(false)
+                .thenValue(10)
+                .elseThrow(() -> new RuntimeException("0000"));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenThrowThenValueElseThrow_returnThenValue() {
+        Integer some = If.isTrue(false)
+                .thenThrow(() -> new IllegalAccessError("11111"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalCallerException("22222"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(true)
+                .thenValue(10)
+                .elseThrow(() -> new RuntimeException("0000"));
+        assertThat(some, is(10));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenThrowThenValueElseThrow_throwThirdException() {
+        expectedException.expectMessage("some");
+        expectedException.expect(IllegalArgumentException.class);
+        If.isTrue(false)
+                .thenThrow(() -> new IllegalAccessError("11111"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalCallerException("22222"))
+                .elseIf(true)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(false)
+                .thenValue(10)
+                .elseThrow(() -> new RuntimeException("0000"));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenThrowThenValueElseThrow_throwSecondException() {
+        expectedException.expectMessage("22222");
+        expectedException.expect(IllegalCallerException.class);
+        If.isTrue(false)
+                .thenThrow(() -> new IllegalAccessError("11111"))
+                .elseIf(true)
+                .thenThrow(() -> new IllegalCallerException("22222"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(false)
+                .thenValue(10)
+                .elseThrow(() -> new RuntimeException("0000"));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenThrowThenGetElseThrow_returnThenGet() {
+        Integer some = If.isTrue(false)
+                .thenThrow(() -> new IllegalAccessError("11111"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalCallerException("22222"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(true)
+                .thenGet(() -> 10)
+                .elseThrow(() -> new RuntimeException("0000"));
+
+        assertThat(some, is(10));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenThrowThenGetElseGet_returnElseGet() {
+        Integer some = If.isTrue(false)
+                .thenThrow(() -> new IllegalAccessError("11111"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalCallerException("22222"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(false)
+                .thenGet(() -> 10)
+                .elseGet(() -> 20);
+
+        assertThat(some, is(20));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenThrowThenValueElseThrow_throwFirstException() {
+        expectedException.expectMessage("11111");
+        expectedException.expect(IllegalAccessError.class);
+        If.isTrue(true)
+                .thenThrow(() -> new IllegalAccessError("11111"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalCallerException("22222"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalArgumentException("some"))
+                .elseIf(false)
+                .thenValue(10)
+                .elseThrow(() -> new RuntimeException("0000"));
+    }
+
+    @Test
     public void isTrue_thenGetElseGet_returnElseGetValue_whenExpressionIsFalse() {
         Integer value = If.isTrue(false)
                 .thenGet(() -> 10)
