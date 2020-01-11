@@ -757,6 +757,178 @@ public class IfTest {
     }
 
     @Test
+    public void isTrue_thenGetThenGetThenGetElseGet_returnFirstGet() {
+        Integer value = If.isTrue(true)
+                .thenGet(() -> 10)
+                .elseIf(false)
+                .thenGet(() -> 20)
+                .elseIf(false)
+                .thenGet(() -> 30)
+                .elseIf(false)
+                .thenGet(() -> 40)
+                .elseGet(() -> 50);
+
+        assertThat(value, is(10));
+    }
+
+    @Test
+    public void isTrue_thenGetThenGetThenGetElseGet_returnSecondGet() {
+        Integer value = If.isTrue(false)
+                .thenGet(() -> 10)
+                .elseIf(true)
+                .thenGet(() -> 20)
+                .elseIf(false)
+                .thenGet(() -> 30)
+                .elseIf(true)
+                .thenGet(() -> 40)
+                .elseGet(() -> 50);
+
+        assertThat(value, is(20));
+    }
+
+    @Test
+    public void isTrue_thenGetThenGetThenGetElseGet_returnThirdGet() {
+        Integer value = If.isTrue(false)
+                .thenGet(() -> 10)
+                .elseIf(false)
+                .thenGet(() -> 20)
+                .elseIf(true)
+                .thenGet(() -> 30)
+                .elseIf(true)
+                .thenGet(() -> 40)
+                .elseGet(() -> 50);
+
+        assertThat(value, is(30));
+    }
+
+    @Test
+    public void isTrue_thenGetThenGetThenGetElseGet_returnFourthGet() {
+        Integer value = If.isTrue(false)
+                .thenGet(() -> 10)
+                .elseIf(false)
+                .thenGet(() -> 20)
+                .elseIf(false)
+                .thenGet(() -> 30)
+                .elseIf(true)
+                .thenGet(() -> 40)
+                .elseGet(() -> 50);
+
+        assertThat(value, is(40));
+    }
+
+    @Test
+    public void isTrue_thenGetThenGetThenGetElseGet_returnFifthGet() {
+        Integer value = If.isTrue(false)
+                .thenGet(() -> 10)
+                .elseIf(false)
+                .thenGet(() -> 20)
+                .elseIf(false)
+                .thenGet(() -> 30)
+                .elseIf(false)
+                .thenGet(() -> 40)
+                .elseGet(() -> 50);
+
+        assertThat(value, is(50));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenThrowElseValue_returnElseValue() {
+        Integer value = If.isTrue(false)
+                .thenThrow(() -> new RuntimeException("run time"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalArgumentException("illegal"))
+                .elseValue(50);
+
+        assertThat(value, is(50));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenThrowElseValue_returnElseGet() {
+        Integer value = If.isTrue(false)
+                .thenThrow(() -> new RuntimeException("run time"))
+                .elseIf(false)
+                .thenThrow(() -> new IllegalArgumentException("illegal"))
+                .elseGet(() -> 50);
+
+        assertThat(value, is(50));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenGetThenValueThrowElseValue_returnThenGet() {
+        Integer value = If.isTrue(false)
+                .thenThrow(() -> new RuntimeException("run time"))
+                .elseIf(true)
+                .thenGet(() -> 10)
+                .elseIf(true)
+                .thenValue(20)
+                .elseIf(true)
+                .thenThrow(() -> new IllegalArgumentException("illegal"))
+                .elseGet(() -> 50);
+
+        assertThat(value, is(10));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenGetThenValueThrowElseValue_returnThenValue() {
+        Integer value = If.isTrue(false)
+                .thenThrow(() -> new RuntimeException("run time"))
+                .elseIf(false)
+                .thenGet(() -> 10)
+                .elseIf(true)
+                .thenValue(20)
+                .elseIf(true)
+                .thenThrow(() -> new IllegalArgumentException("illegal"))
+                .elseGet(() -> 50);
+
+        assertThat(value, is(20));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenGetThenValueThrowElseValue_returnElseValue() {
+        Integer value = If.isTrue(false)
+                .thenThrow(() -> new RuntimeException("run time"))
+                .elseIf(false)
+                .thenGet(() -> 10)
+                .elseIf(false)
+                .thenValue(20)
+                .elseIf(false)
+                .thenThrow(() -> new IllegalArgumentException("illegal"))
+                .elseGet(() -> 50);
+
+        assertThat(value, is(50));
+    }
+
+    @Test
+    public void isTrue_thenThrowThenGetThenValueThrowElseValue_throwFirstException() {
+        expectedException.expectMessage("run time");
+        expectedException.expect(RuntimeException.class);
+        If.isTrue(true)
+                .thenThrow(() -> new RuntimeException("run time"))
+                .elseIf(true)
+                .thenGet(() -> 10)
+                .elseIf(true)
+                .thenValue(20)
+                .elseIf(true)
+                .thenThrow(() -> new IllegalArgumentException("illegal"))
+                .elseGet(() -> 50);
+    }
+
+    @Test
+    public void isTrue_thenThrowThenGetThenValueThrowElseValue_throwSecondException() {
+        expectedException.expectMessage("illegal");
+        expectedException.expect(IllegalArgumentException.class);
+        If.isTrue(false)
+                .thenThrow(() -> new RuntimeException("run time"))
+                .elseIf(false)
+                .thenGet(() -> 10)
+                .elseIf(false)
+                .thenValue(20)
+                .elseIf(true)
+                .thenThrow(() -> new IllegalArgumentException("illegal"))
+                .elseGet(() -> 50);
+    }
+
+    @Test
     public void isTrue_thenGetElseGet_returnElseGetValue_whenExpressionIsFalse() {
         Integer value = If.isTrue(false)
                 .thenGet(() -> 10)

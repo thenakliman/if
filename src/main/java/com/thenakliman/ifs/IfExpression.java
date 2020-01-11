@@ -251,7 +251,7 @@ class IfExpression {
 
             @Override
             public <X extends Throwable> IElse<T> thenThrow(final Supplier<? extends X> exceptionSupplier) throws X {
-                throw exceptionSupplier.get();
+                return new TrueExpression<>(this.value);
             }
         }
     }
