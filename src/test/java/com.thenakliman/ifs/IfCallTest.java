@@ -106,23 +106,4 @@ public class IfCallTest {
 
         verify(testHelper, times(0)).thenCallMe();
     }
-
-    @Test
-    public void isNullThen_thenCall_callThenCall_whenObjectIsNull() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
-
-        If.isNullThen(null, testHelper::thenCallMe);
-
-        verify(testHelper).thenCallMe();
-    }
-
-    @Test
-    public void isNullThen_thenCall_doNotCall_whenObjectIsNonNull() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
-
-        If.isNullThen("something", testHelper::thenCallMe);
-
-        verify(testHelper, times(0)).thenCallMe();
-    }
-
 }

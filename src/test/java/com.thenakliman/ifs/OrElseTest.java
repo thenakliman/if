@@ -4,8 +4,7 @@ import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class OrElseTest {
     @Test
@@ -137,5 +136,23 @@ public class OrElseTest {
         Integer value = If.nullOrElse(conditionValue, () -> 100, Integer::valueOf);
 
         assertThat(value, is(100));
+    }
+
+    @Test
+    public void isNullThen_thenCall_callThenCall_whenObjectIsNull() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+
+        If.isNullThen(null, testHelper::thenCallMe);
+
+        verify(testHelper).thenCallMe();
+    }
+
+    @Test
+    public void isNullThen_thenCall_doNotCall_whenObjectIsNonNull() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+
+        If.isNullThen("something", testHelper::thenCallMe);
+
+        verify(testHelper, times(0)).thenCallMe();
     }
 }
