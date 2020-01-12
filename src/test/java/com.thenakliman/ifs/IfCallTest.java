@@ -376,7 +376,6 @@ public class IfCallTest {
 
     @Test
     public void isTrue_thenThrowElseIfThenThrowElseThrow_throwFirstException() {
-        TestHelper testHelper = mock(TestHelper.class);
         expectedException.expect(RuntimeException.class);
         expectedException.expectMessage("runtime");
         If.isTrue(true)
@@ -388,7 +387,6 @@ public class IfCallTest {
 
     @Test
     public void isTrue_thenThrowElseIfThenThrowElseThrow_throwSecondException() {
-        TestHelper testHelper = mock(TestHelper.class);
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("illegal");
         If.isTrue(false)
@@ -400,7 +398,6 @@ public class IfCallTest {
 
     @Test
     public void isTrue_thenThrowElseIfThenThrowElseThrow_throwElseException() {
-        TestHelper testHelper = mock(TestHelper.class);
         expectedException.expect(IllegalMonitorStateException.class);
         expectedException.expectMessage("monitoring");
         If.isTrue(false)
@@ -408,6 +405,301 @@ public class IfCallTest {
                 .elseIf(false)
                 .thenThrow(() -> new IllegalArgumentException("illegal"))
                 .elseThrow(() -> new IllegalMonitorStateException("monitoring"));
+    }
+
+    @Test
+    public void isTrue_thenCallElseDoNothing_callThenCall_whenExpressionIsTrue() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isTrue(true)
+                .thenCall(testHelper::thenCallMe1)
+                .elseDoNothing();
+        verify(testHelper).thenCallMe1();
+    }
+
+    @Test
+    public void isTrue_thenCallElseDoNothing_dontCallThenCall_whenExpressionIsFalse() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isTrue(false)
+                .thenCall(testHelper::thenCallMe1)
+                .elseDoNothing();
+        verify(testHelper, times(0)).thenCallMe1();
+    }
+
+    @Test
+    public void isTrue_thenCallElseIfThenCallElseDoNothing_dontCallSecondThenCall() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isTrue(true)
+                .thenCall(testHelper::thenCallMe1)
+                .elseIf(false)
+                .thenCall(testHelper::thenCallMe2)
+                .elseDoNothing();
+        verify(testHelper, times(0)).thenCallMe2();
+    }
+
+    @Test
+    public void isTrue_thenCallElseIfThenCallElseDoNothing_callFirstThenCall() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isTrue(true)
+                .thenCall(testHelper::thenCallMe1)
+                .elseIf(false)
+                .thenCall(testHelper::thenCallMe2)
+                .elseDoNothing();
+        verify(testHelper).thenCallMe1();
+    }
+
+    @Test
+    public void isTrue_thenCallElseIfThenCallElseDoNothing_dontCallFirstThenCall_whenElseIfIsTrue() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isTrue(false)
+                .thenCall(testHelper::thenCallMe1)
+                .elseIf(true)
+                .thenCall(testHelper::thenCallMe2)
+                .elseDoNothing();
+        verify(testHelper, times(0)).thenCallMe1();
+    }
+
+    @Test
+    public void isTrue_thenCallElseIfThenCallElseDoNothing_callSecondThenCall_whenElseIfIsTrue() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isTrue(false)
+                .thenCall(testHelper::thenCallMe1)
+                .elseIf(true)
+                .thenCall(testHelper::thenCallMe2)
+                .elseDoNothing();
+        verify(testHelper).thenCallMe2();
+    }
+
+    @Test
+    public void isTrue_thenCallElseIfThenCallElseDoNothing_dontCallFirstThenCall_whenAllExpressionAreFalse() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isTrue(false)
+                .thenCall(testHelper::thenCallMe1)
+                .elseIf(false)
+                .thenCall(testHelper::thenCallMe2)
+                .elseDoNothing();
+        verify(testHelper, times(0)).thenCallMe1();
+    }
+
+    @Test
+    public void isTrue_thenCallElseIfThenCallElseDoNothing_dontCallSecondThenCall_whenAllExpressionAreFalse() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isTrue(false)
+                .thenCall(testHelper::thenCallMe1)
+                .elseIf(false)
+                .thenCall(testHelper::thenCallMe2)
+                .elseDoNothing();
+        verify(testHelper, times(0)).thenCallMe2();
+    }
+
+    @Test
+    public void isTrue_thenThrowElseIfThenCallElseDoNothing_dontCallSecondThenCall_whenAllExpressionAreFalse() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isTrue(false)
+                .thenThrow(() -> new IllegalArgumentException("illegal"))
+                .elseIf(false)
+                .thenCall(testHelper::thenCallMe2)
+                .elseDoNothing();
+
+        verify(testHelper, times(0)).thenCallMe2();
+    }
+
+    @Test
+    public void isTrue_thenThrowElseIfThenThrowElseDoNothing_dontThrowAnyException_whenAllExpressionAreFalse() {
+        If.isTrue(false)
+                .thenThrow(() -> new IllegalArgumentException("illegal"))
+                .elseIf(false)
+                .thenThrow(() -> new RuntimeException("runtime exception"))
+                .elseDoNothing();
+    }
+
+    @Test
+    public void isTrue_thenThrowElseIfThenThrowElseDoNothing_throwThenThrowException_whenExpressionIsTrue() {
+        expectedException.expectMessage("illegal");
+        expectedException.expect(IllegalArgumentException.class);
+        If.isTrue(true)
+                .thenThrow(() -> new IllegalArgumentException("illegal"))
+                .elseIf(false)
+                .thenThrow(() -> new RuntimeException("runtime exception"))
+                .elseDoNothing();
+    }
+
+    @Test
+    public void isTrue_thenThrowElseIfThenThrowElseDoNothing_throwThenThrowException_whenElseIfExpressionIsTrue() {
+        expectedException.expectMessage("runtime exception");
+        expectedException.expect(RuntimeException.class);
+        If.isTrue(false)
+                .thenThrow(() -> new IllegalArgumentException("illegal"))
+                .elseIf(true)
+                .thenThrow(() -> new RuntimeException("runtime exception"))
+                .elseDoNothing();
+    }
+
+    @Test
+    public void isFalse_thenCallElseDoNothing_dontCallThenCall_whenExpressionIsTrue() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isFalse(true)
+                .thenCall(testHelper::thenCallMe1)
+                .elseDoNothing();
+        verify(testHelper, times(0)).thenCallMe1();
+    }
+
+    @Test
+    public void isFalse_thenCallElseIfThenCallElseDoNothing_dontCallSecondThenCall() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isFalse(false)
+                .thenCall(testHelper::thenCallMe1)
+                .elseIf(false)
+                .thenCall(testHelper::thenCallMe2)
+                .elseDoNothing();
+        verify(testHelper, times(0)).thenCallMe2();
+    }
+
+    @Test
+    public void isFalse_thenCallElseIfThenCallElseDoNothing_callFirstThenCall() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isFalse(false)
+                .thenCall(testHelper::thenCallMe1)
+                .elseIf(false)
+                .thenCall(testHelper::thenCallMe2)
+                .elseDoNothing();
+        verify(testHelper).thenCallMe1();
+    }
+
+    @Test
+    public void isFalse_thenCallElseIfThenCallElseDoNothing_dontCallFirstThenCall_whenElseIfIsFalse_andExressionIsTrue() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isFalse(true)
+                .thenCall(testHelper::thenCallMe1)
+                .elseIf(true)
+                .thenCall(testHelper::thenCallMe2)
+                .elseDoNothing();
+        verify(testHelper, times(0)).thenCallMe1();
+    }
+
+    @Test
+    public void isFalse_thenCallElseIfThenCallElseDoNothing_callSecondThenCall_whenElseIfIsTrue_andExpressionIsTrue() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isFalse(true)
+                .thenCall(testHelper::thenCallMe1)
+                .elseIf(true)
+                .thenCall(testHelper::thenCallMe2)
+                .elseDoNothing();
+        verify(testHelper).thenCallMe2();
+    }
+
+    @Test
+    public void isFalse_thenCallElseIfThenCallElseDoNothing_dontCallFirstThenCall_whenAllExpressionAreFalseAndIsFalseIsTrue() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isFalse(true)
+                .thenCall(testHelper::thenCallMe1)
+                .elseIf(false)
+                .thenCall(testHelper::thenCallMe2)
+                .elseDoNothing();
+        verify(testHelper, times(0)).thenCallMe1();
+    }
+
+    @Test
+    public void isFalse_thenCallElseIfThenCallElseDoNothing_dontCallSecondThenCall_whenAllExpressionAreFalseAndIsFalseIsTrue() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isFalse(true)
+                .thenCall(testHelper::thenCallMe1)
+                .elseIf(false)
+                .thenCall(testHelper::thenCallMe2)
+                .elseDoNothing();
+        verify(testHelper, times(0)).thenCallMe2();
+    }
+
+    @Test
+    public void isFalse_thenThrowElseIfThenCallElseDoNothing_dontCallSecondThenCall_whenAllExpressionAreFalseAndIsFalseIsTrue() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isFalse(true)
+                .thenThrow(() -> new IllegalArgumentException("illegal"))
+                .elseIf(false)
+                .thenCall(testHelper::thenCallMe2)
+                .elseDoNothing();
+
+        verify(testHelper, times(0)).thenCallMe2();
+    }
+
+    @Test
+    public void isFalse_thenThrowElseIfThenThrowElseDoNothing_dontThrowAnyException_whenAllExpressionAreFalse() {
+        If.isFalse(true)
+                .thenThrow(() -> new IllegalArgumentException("illegal"))
+                .elseIf(false)
+                .thenThrow(() -> new RuntimeException("runtime exception"))
+                .elseDoNothing();
+    }
+
+    @Test
+    public void isFalse_thenThrowElseIfThenThrowElseDoNothing_throwThenThrowException_whenExpressionIsTrue() {
+        expectedException.expectMessage("illegal");
+        expectedException.expect(IllegalArgumentException.class);
+        If.isFalse(false)
+                .thenThrow(() -> new IllegalArgumentException("illegal"))
+                .elseIf(false)
+                .thenThrow(() -> new RuntimeException("runtime exception"))
+                .elseDoNothing();
+    }
+
+    @Test
+    public void isFalse_thenThrowElseIfThenThrowElseDoNothing_throwThenThrowException_whenElseIfExpressionIsTrue() {
+        expectedException.expectMessage("runtime exception");
+        expectedException.expect(RuntimeException.class);
+        If.isFalse(true)
+                .thenThrow(() -> new IllegalArgumentException("illegal"))
+                .elseIf(true)
+                .thenThrow(() -> new RuntimeException("runtime exception"))
+                .elseDoNothing();
+    }
+
+    @Test
+    public void isFalse_thenCallElseDoNothing_callThenCall_whenExpressionIsFalse() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isFalse(false)
+                .thenCall(testHelper::thenCallMe1)
+                .elseDoNothing();
+        verify(testHelper).thenCallMe1();
+    }
+
+    @Test
+    public void isFalse_thenCallElseDoNothing_dontCallElseNothing_whenExpressionIsTrue() {
+        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        If.isFalse(true)
+                .thenCall(testHelper::thenCallMe1)
+                .elseDoNothing();
+        verify(testHelper, times(0)).thenCallMe1();
+    }
+
+    @Test
+    public void isFalse_thenThrowElseDoNothing_throwException_whenExpressionIsFalse() {
+        expectedException.expectMessage("runtime");
+        expectedException.expect(RuntimeException.class);
+        If.isFalse(false)
+                .thenThrow(() -> new RuntimeException("runtime"))
+                .elseDoNothing();
+    }
+
+    @Test
+    public void isFalse_thenThrowElseDoNothing_dontThrowException_whenExpressionIsTrue() {
+        If.isFalse(true)
+                .thenThrow(() -> new RuntimeException("runtime"))
+                .elseDoNothing();
+    }
+
+    @Test
+    public void isTrue_thenThrowElseDoNothing_throwException_whenExpressionIsTrue() {
+        expectedException.expectMessage("runtime");
+        expectedException.expect(RuntimeException.class);
+        If.isTrue(true)
+                .thenThrow(() -> new RuntimeException("runtime"))
+                .elseDoNothing();
+    }
+
+    @Test
+    public void isTrue_thenThrowElseDoNothing_dontThrowException_whenExpressionIsFalse() {
+        If.isTrue(false)
+                .thenThrow(() -> new RuntimeException("runtime"))
+                .elseDoNothing();
     }
 
     static class TestHelper {

@@ -23,6 +23,8 @@ class IfExpression {
         IExceptionElseIf elseIf(final boolean expression);
 
         <X extends Throwable> void elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
+
+        void elseDoNothing();
     }
 
     interface IExceptionElseIf {
@@ -57,6 +59,8 @@ class IfExpression {
         <X extends Throwable> void elseThrow(final Supplier<? extends X> exceptionSupplier) throws X;
 
         IElseIfCall elseIf(final boolean expression);
+
+        void elseDoNothing();
     }
 
     interface IExpressionThen {
@@ -79,6 +83,8 @@ class IfExpression {
         <T> T elseGet(final Supplier<T> supplier);
 
         IExceptionElseIf elseIf(final boolean expression);
+
+        void elseDoNothing();
     }
 
     static class TrueExpressionThen implements IExpressionThen {
@@ -154,6 +160,11 @@ class IfExpression {
             return new IExceptionFalseElseIfImpl();
         }
 
+        @Override
+        public void elseDoNothing() {
+            // do nothing
+        }
+
         private static class IExceptionFalseElseIfImpl implements IExceptionElseIf {
             @Override
             public <T> IElse<T> thenGet(final Supplier<T> supplier) {
@@ -198,6 +209,11 @@ class IfExpression {
                 @Override
                 public <Y extends Throwable> void elseThrow(final Supplier<? extends Y> exceptionSupplier) throws Y {
                     throw exceptionSupplier.get();
+                }
+
+                @Override
+                public void elseDoNothing() {
+                    // do nothing
                 }
             }
         }
@@ -363,6 +379,11 @@ class IfExpression {
                 }
             };
         }
+
+        @Override
+        public void elseDoNothing() {
+            //
+        }
     }
 
     private static class FalseExpressionCall implements IElseCall {
@@ -383,6 +404,11 @@ class IfExpression {
             }
 
             return new FalseElseIfCall();
+        }
+
+        @Override
+        public void elseDoNothing() {
+            // do nothing
         }
     }
 

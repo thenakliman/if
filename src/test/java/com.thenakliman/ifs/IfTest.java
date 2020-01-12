@@ -1096,8 +1096,12 @@ public class IfTest {
     }
 
     static class TestHelper {
-        void thenCallMe() {
-            System.out.println("then call me");
+        void thenCallMe1() {
+            System.out.println("then call me1");
+        }
+
+        void thenCallMe2() {
+            System.out.println("then call me2");
         }
 
         void elseCallMe() {

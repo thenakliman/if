@@ -27,16 +27,16 @@ public class OrElseTest {
     public void ifOrElse_thenCallElseCall_callThenCall_whenSupplierEvaluatesToTrue() {
         IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
 
-        If.orElse(() -> true, testHelper::thenCallMe, testHelper::elseCallMe);
+        If.orElse(() -> true, testHelper::thenCallMe1, testHelper::elseCallMe);
 
-        verify(testHelper).thenCallMe();
+        verify(testHelper).thenCallMe1();
     }
 
     @Test
     public void ifOrElse_thenCallElseCall_callElseCall_whenSupplierEvaluatesToFalse() {
         IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
 
-        If.orElse(() -> false, testHelper::thenCallMe, testHelper::elseCallMe);
+        If.orElse(() -> false, testHelper::thenCallMe1, testHelper::elseCallMe);
 
         verify(testHelper).elseCallMe();
     }
@@ -93,16 +93,16 @@ public class OrElseTest {
     public void ifOrElse_thenCallElseCall_callThenCall_whenExpressionEvaluatesToTrue() {
         IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
 
-        If.orElse(true, testHelper::thenCallMe, testHelper::elseCallMe);
+        If.orElse(true, testHelper::thenCallMe1, testHelper::elseCallMe);
 
-        verify(testHelper).thenCallMe();
+        verify(testHelper).thenCallMe1();
     }
 
     @Test
     public void ifOrElse_thenCallElseCall_callElseCall_whenExpressionEvaluatesToFalse() {
         IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
 
-        If.orElse(false, testHelper::thenCallMe, testHelper::elseCallMe);
+        If.orElse(false, testHelper::thenCallMe1, testHelper::elseCallMe);
 
         verify(testHelper).elseCallMe();
     }
@@ -142,17 +142,17 @@ public class OrElseTest {
     public void isNullThen_thenCall_callThenCall_whenObjectIsNull() {
         IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
 
-        If.isNullThen(null, testHelper::thenCallMe);
+        If.isNullThen(null, testHelper::thenCallMe1);
 
-        verify(testHelper).thenCallMe();
+        verify(testHelper).thenCallMe1();
     }
 
     @Test
     public void isNullThen_thenCall_doNotCall_whenObjectIsNonNull() {
         IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
 
-        If.isNullThen("something", testHelper::thenCallMe);
+        If.isNullThen("something", testHelper::thenCallMe1);
 
-        verify(testHelper, times(0)).thenCallMe();
+        verify(testHelper, times(0)).thenCallMe1();
     }
 }
