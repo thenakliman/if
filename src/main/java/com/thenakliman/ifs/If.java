@@ -51,8 +51,8 @@ final class If {
 
 
     public static <T> T orElse(final boolean expression,
-                               final Supplier<T> ifSupplier,
-                               final Supplier<T> elseSupplier) {
+                               final Supplier<? extends T> ifSupplier,
+                               final Supplier<? extends T> elseSupplier) {
         if (expression) {
             return ifSupplier.get();
         }
@@ -60,32 +60,32 @@ final class If {
         return elseSupplier.get();
     }
 
-    public static <T> T orElse(final Supplier<Boolean> supplier,
-                               final Supplier<T> ifSupplier,
-                               final Supplier<T> elseSupplier) {
+    public static <T> T orElse(final Supplier<Boolean> booleanSupplier,
+                               final Supplier<? extends T> ifSupplier,
+                               final Supplier<? extends T> elseSupplier) {
 
-        return orElse(supplier.get(), ifSupplier, elseSupplier);
+        return orElse(booleanSupplier.get(), ifSupplier, elseSupplier);
     }
 
     public static <T, R> R nullOrElse(final T value,
-                                      final Supplier<R> ifSupplier,
-                                      final Supplier<R> elseSupplier) {
+                                      final Supplier<? extends R> ifSupplier,
+                                      final Supplier<? extends R> elseSupplier) {
 
         return orElse(Objects.isNull(value), ifSupplier, elseSupplier);
     }
 
     public static <T, R> R nullOrElse(final T value,
-                                      final Supplier<R> ifSupplier,
-                                      final Function<T, R> elseFunction) {
+                                      final Supplier<? extends R> ifSupplier,
+                                      final Function<T, ? extends R> elseFunction) {
 
         return orElse(Objects.isNull(value), ifSupplier, () -> elseFunction.apply(value));
     }
 
-    public static void orElse(final Supplier<Boolean> supplier,
+    public static void orElse(final Supplier<Boolean> booleanSupplier,
                               final IfExpression.Callable ifCallable,
                               final IfExpression.Callable elseCallable) {
 
-        orElse(supplier.get(), ifCallable, elseCallable);
+        orElse(booleanSupplier.get(), ifCallable, elseCallable);
     }
 
     public static void orElse(final boolean expression,
@@ -102,8 +102,8 @@ final class If {
         return orElse(expression, () -> thenValue, () -> elseValue);
     }
 
-    public static <T> T orElse(final Supplier<Boolean> supplier, final T thenValue, final T elseValue) {
-        return orElse(supplier.get(), () -> thenValue, () -> elseValue);
+    public static <T> T orElse(final Supplier<Boolean> booleanSupplier, final T thenValue, final T elseValue) {
+        return orElse(booleanSupplier.get(), () -> thenValue, () -> elseValue);
     }
 
     public static void isTrueThen(final boolean expression, final IfExpression.Callable ifCallable) {
