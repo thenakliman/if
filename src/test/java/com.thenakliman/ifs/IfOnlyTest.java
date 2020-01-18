@@ -12,38 +12,38 @@ public class IfOnlyTest {
 
     @Test
     public void isTrueThen_callThenCall_whenExpressionEvaluatesToTrue() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
 
-        If.isTrueThen(true, testHelper::thenCallMe1);
+        If.isTrueThen(true, callTestHelper::thenCallMe1);
 
-        verify(testHelper).thenCallMe1();
+        verify(callTestHelper).thenCallMe1();
     }
 
     @Test
     public void isTrueThen_thenCall_doNotCallSupplier_whenExpressionEvaluatesToFalse() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
 
-        If.isTrueThen(false, testHelper::thenCallMe1);
+        If.isTrueThen(false, callTestHelper::thenCallMe1);
 
-        verify(testHelper, times(0)).thenCallMe1();
+        verify(callTestHelper, times(0)).thenCallMe1();
     }
 
     @Test
     public void isTrueThen_thenCall_callThenCall_whenSupplierEvaluatesToFalse() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
 
-        If.isTrueThen(() -> false, testHelper::thenCallMe1);
+        If.isTrueThen(() -> false, callTestHelper::thenCallMe1);
 
-        verify(testHelper, times(0)).thenCallMe1();
+        verify(callTestHelper, times(0)).thenCallMe1();
     }
 
     @Test
     public void isTrueThen_thenCall_callThenCall_whenSupplierEvaluatesToTrue() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
 
-        If.isTrueThen(() -> true, testHelper::thenCallMe1);
+        If.isTrueThen(() -> true, callTestHelper::thenCallMe1);
 
-        verify(testHelper).thenCallMe1();
+        verify(callTestHelper).thenCallMe1();
     }
 
     @Test
@@ -59,19 +59,19 @@ public class IfOnlyTest {
 
     @Test
     public void isTrueThen_thenCall_callThenCall_whenExpressionIsTrue() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
 
-        If.isTrueThen(true).thenCall(testHelper::thenCallMe1);
+        If.isTrueThen(true).thenCall(callTestHelper::thenCallMe1);
 
-        verify(testHelper).thenCallMe1();
+        verify(callTestHelper).thenCallMe1();
     }
 
     @Test
     public void isTrueThen_thenCall_doNotCall_whenExpressionIsFalse() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
 
-        If.isTrueThen(false).thenCall(testHelper::thenCallMe1);
+        If.isTrueThen(false).thenCall(callTestHelper::thenCallMe1);
 
-        verify(testHelper, times(0)).thenCallMe1();
+        verify(callTestHelper, times(0)).thenCallMe1();
     }
 }

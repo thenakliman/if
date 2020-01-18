@@ -409,98 +409,118 @@ public class IfCallTest {
 
     @Test
     public void isTrue_thenCallElseDoNothing_callThenCall_whenExpressionIsTrue() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isTrue(true)
-                .thenCall(testHelper::thenCallMe1)
+                .thenCall(callTestHelper::thenCallMe1)
                 .elseDoNothing();
-        verify(testHelper).thenCallMe1();
+        verify(callTestHelper).thenCallMe1();
     }
 
     @Test
     public void isTrue_thenCallElseDoNothing_dontCallThenCall_whenExpressionIsFalse() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isTrue(false)
-                .thenCall(testHelper::thenCallMe1)
+                .thenCall(callTestHelper::thenCallMe1)
                 .elseDoNothing();
-        verify(testHelper, times(0)).thenCallMe1();
+        verify(callTestHelper, times(0)).thenCallMe1();
+    }
+
+    @Test
+    public void isTrue_thenThrowElseCall_throwThenThrowException_whenExpressionIsTrue() {
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
+
+        expectedException.expect(IllegalArgumentException.class);
+        If.isTrue(true)
+                .thenThrow(IllegalArgumentException::new)
+                .elseCall(callTestHelper::elseCallMe);
+    }
+
+    @Test
+    public void isTrue_ThenThrowElseCall_callThenCall_whenExpressionIsFalse() {
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
+
+        If.isTrue(false)
+                .thenThrow(IllegalArgumentException::new)
+                .elseCall(callTestHelper::elseCallMe);
+        verify(callTestHelper).elseCallMe();
     }
 
     @Test
     public void isTrue_thenCallElseIfThenCallElseDoNothing_dontCallSecondThenCall() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isTrue(true)
-                .thenCall(testHelper::thenCallMe1)
+                .thenCall(callTestHelper::thenCallMe1)
                 .elseIf(false)
-                .thenCall(testHelper::thenCallMe2)
+                .thenCall(callTestHelper::thenCallMe2)
                 .elseDoNothing();
-        verify(testHelper, times(0)).thenCallMe2();
+        verify(callTestHelper, times(0)).thenCallMe2();
     }
 
     @Test
     public void isTrue_thenCallElseIfThenCallElseDoNothing_callFirstThenCall() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isTrue(true)
-                .thenCall(testHelper::thenCallMe1)
+                .thenCall(callTestHelper::thenCallMe1)
                 .elseIf(false)
-                .thenCall(testHelper::thenCallMe2)
+                .thenCall(callTestHelper::thenCallMe2)
                 .elseDoNothing();
-        verify(testHelper).thenCallMe1();
+        verify(callTestHelper).thenCallMe1();
     }
 
     @Test
     public void isTrue_thenCallElseIfThenCallElseDoNothing_dontCallFirstThenCall_whenElseIfIsTrue() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isTrue(false)
-                .thenCall(testHelper::thenCallMe1)
+                .thenCall(callTestHelper::thenCallMe1)
                 .elseIf(true)
-                .thenCall(testHelper::thenCallMe2)
+                .thenCall(callTestHelper::thenCallMe2)
                 .elseDoNothing();
-        verify(testHelper, times(0)).thenCallMe1();
+        verify(callTestHelper, times(0)).thenCallMe1();
     }
 
     @Test
     public void isTrue_thenCallElseIfThenCallElseDoNothing_callSecondThenCall_whenElseIfIsTrue() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isTrue(false)
-                .thenCall(testHelper::thenCallMe1)
+                .thenCall(callTestHelper::thenCallMe1)
                 .elseIf(true)
-                .thenCall(testHelper::thenCallMe2)
+                .thenCall(callTestHelper::thenCallMe2)
                 .elseDoNothing();
-        verify(testHelper).thenCallMe2();
+        verify(callTestHelper).thenCallMe2();
     }
 
     @Test
     public void isTrue_thenCallElseIfThenCallElseDoNothing_dontCallFirstThenCall_whenAllExpressionAreFalse() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isTrue(false)
-                .thenCall(testHelper::thenCallMe1)
+                .thenCall(callTestHelper::thenCallMe1)
                 .elseIf(false)
-                .thenCall(testHelper::thenCallMe2)
+                .thenCall(callTestHelper::thenCallMe2)
                 .elseDoNothing();
-        verify(testHelper, times(0)).thenCallMe1();
+        verify(callTestHelper, times(0)).thenCallMe1();
     }
 
     @Test
     public void isTrue_thenCallElseIfThenCallElseDoNothing_dontCallSecondThenCall_whenAllExpressionAreFalse() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isTrue(false)
-                .thenCall(testHelper::thenCallMe1)
+                .thenCall(callTestHelper::thenCallMe1)
                 .elseIf(false)
-                .thenCall(testHelper::thenCallMe2)
+                .thenCall(callTestHelper::thenCallMe2)
                 .elseDoNothing();
-        verify(testHelper, times(0)).thenCallMe2();
+        verify(callTestHelper, times(0)).thenCallMe2();
     }
 
     @Test
     public void isTrue_thenThrowElseIfThenCallElseDoNothing_dontCallSecondThenCall_whenAllExpressionAreFalse() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isTrue(false)
                 .thenThrow(() -> new IllegalArgumentException("illegal"))
                 .elseIf(false)
-                .thenCall(testHelper::thenCallMe2)
+                .thenCall(callTestHelper::thenCallMe2)
                 .elseDoNothing();
 
-        verify(testHelper, times(0)).thenCallMe2();
+        verify(callTestHelper, times(0)).thenCallMe2();
     }
 
     @Test
@@ -536,89 +556,89 @@ public class IfCallTest {
 
     @Test
     public void isFalse_thenCallElseDoNothing_dontCallThenCall_whenExpressionIsTrue() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isFalse(true)
-                .thenCall(testHelper::thenCallMe1)
+                .thenCall(callTestHelper::thenCallMe1)
                 .elseDoNothing();
-        verify(testHelper, times(0)).thenCallMe1();
+        verify(callTestHelper, times(0)).thenCallMe1();
     }
 
     @Test
     public void isFalse_thenCallElseIfThenCallElseDoNothing_dontCallSecondThenCall() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isFalse(false)
-                .thenCall(testHelper::thenCallMe1)
+                .thenCall(callTestHelper::thenCallMe1)
                 .elseIf(false)
-                .thenCall(testHelper::thenCallMe2)
+                .thenCall(callTestHelper::thenCallMe2)
                 .elseDoNothing();
-        verify(testHelper, times(0)).thenCallMe2();
+        verify(callTestHelper, times(0)).thenCallMe2();
     }
 
     @Test
     public void isFalse_thenCallElseIfThenCallElseDoNothing_callFirstThenCall() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isFalse(false)
-                .thenCall(testHelper::thenCallMe1)
+                .thenCall(callTestHelper::thenCallMe1)
                 .elseIf(false)
-                .thenCall(testHelper::thenCallMe2)
+                .thenCall(callTestHelper::thenCallMe2)
                 .elseDoNothing();
-        verify(testHelper).thenCallMe1();
+        verify(callTestHelper).thenCallMe1();
     }
 
     @Test
     public void isFalse_thenCallElseIfThenCallElseDoNothing_dontCallFirstThenCall_whenElseIfIsFalse_andExressionIsTrue() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isFalse(true)
-                .thenCall(testHelper::thenCallMe1)
+                .thenCall(callTestHelper::thenCallMe1)
                 .elseIf(true)
-                .thenCall(testHelper::thenCallMe2)
+                .thenCall(callTestHelper::thenCallMe2)
                 .elseDoNothing();
-        verify(testHelper, times(0)).thenCallMe1();
+        verify(callTestHelper, times(0)).thenCallMe1();
     }
 
     @Test
     public void isFalse_thenCallElseIfThenCallElseDoNothing_callSecondThenCall_whenElseIfIsTrue_andExpressionIsTrue() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isFalse(true)
-                .thenCall(testHelper::thenCallMe1)
+                .thenCall(callTestHelper::thenCallMe1)
                 .elseIf(true)
-                .thenCall(testHelper::thenCallMe2)
+                .thenCall(callTestHelper::thenCallMe2)
                 .elseDoNothing();
-        verify(testHelper).thenCallMe2();
+        verify(callTestHelper).thenCallMe2();
     }
 
     @Test
     public void isFalse_thenCallElseIfThenCallElseDoNothing_dontCallFirstThenCall_whenAllExpressionAreFalseAndIsFalseIsTrue() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isFalse(true)
-                .thenCall(testHelper::thenCallMe1)
+                .thenCall(callTestHelper::thenCallMe1)
                 .elseIf(false)
-                .thenCall(testHelper::thenCallMe2)
+                .thenCall(callTestHelper::thenCallMe2)
                 .elseDoNothing();
-        verify(testHelper, times(0)).thenCallMe1();
+        verify(callTestHelper, times(0)).thenCallMe1();
     }
 
     @Test
     public void isFalse_thenCallElseIfThenCallElseDoNothing_dontCallSecondThenCall_whenAllExpressionAreFalseAndIsFalseIsTrue() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isFalse(true)
-                .thenCall(testHelper::thenCallMe1)
+                .thenCall(callTestHelper::thenCallMe1)
                 .elseIf(false)
-                .thenCall(testHelper::thenCallMe2)
+                .thenCall(callTestHelper::thenCallMe2)
                 .elseDoNothing();
-        verify(testHelper, times(0)).thenCallMe2();
+        verify(callTestHelper, times(0)).thenCallMe2();
     }
 
     @Test
     public void isFalse_thenThrowElseIfThenCallElseDoNothing_dontCallSecondThenCall_whenAllExpressionAreFalseAndIsFalseIsTrue() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isFalse(true)
                 .thenThrow(() -> new IllegalArgumentException("illegal"))
                 .elseIf(false)
-                .thenCall(testHelper::thenCallMe2)
+                .thenCall(callTestHelper::thenCallMe2)
                 .elseDoNothing();
 
-        verify(testHelper, times(0)).thenCallMe2();
+        verify(callTestHelper, times(0)).thenCallMe2();
     }
 
     @Test
@@ -654,20 +674,20 @@ public class IfCallTest {
 
     @Test
     public void isFalse_thenCallElseDoNothing_callThenCall_whenExpressionIsFalse() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isFalse(false)
-                .thenCall(testHelper::thenCallMe1)
+                .thenCall(callTestHelper::thenCallMe1)
                 .elseDoNothing();
-        verify(testHelper).thenCallMe1();
+        verify(callTestHelper).thenCallMe1();
     }
 
     @Test
     public void isFalse_thenCallElseDoNothing_dontCallElseNothing_whenExpressionIsTrue() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
         If.isFalse(true)
-                .thenCall(testHelper::thenCallMe1)
+                .thenCall(callTestHelper::thenCallMe1)
                 .elseDoNothing();
-        verify(testHelper, times(0)).thenCallMe1();
+        verify(callTestHelper, times(0)).thenCallMe1();
     }
 
     @Test

@@ -25,20 +25,20 @@ public class OrElseTest {
 
     @Test
     public void ifOrElse_thenCallElseCall_callThenCall_whenSupplierEvaluatesToTrue() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
 
-        If.orElse(() -> true, testHelper::thenCallMe1, testHelper::elseCallMe);
+        If.orElse(() -> true, callTestHelper::thenCallMe1, callTestHelper::elseCallMe);
 
-        verify(testHelper).thenCallMe1();
+        verify(callTestHelper).thenCallMe1();
     }
 
     @Test
     public void ifOrElse_thenCallElseCall_callElseCall_whenSupplierEvaluatesToFalse() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
 
-        If.orElse(() -> false, testHelper::thenCallMe1, testHelper::elseCallMe);
+        If.orElse(() -> false, callTestHelper::thenCallMe1, callTestHelper::elseCallMe);
 
-        verify(testHelper).elseCallMe();
+        verify(callTestHelper).elseCallMe();
     }
 
     @Test
@@ -91,20 +91,20 @@ public class OrElseTest {
 
     @Test
     public void ifOrElse_thenCallElseCall_callThenCall_whenExpressionEvaluatesToTrue() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
 
-        If.orElse(true, testHelper::thenCallMe1, testHelper::elseCallMe);
+        If.orElse(true, callTestHelper::thenCallMe1, callTestHelper::elseCallMe);
 
-        verify(testHelper).thenCallMe1();
+        verify(callTestHelper).thenCallMe1();
     }
 
     @Test
     public void ifOrElse_thenCallElseCall_callElseCall_whenExpressionEvaluatesToFalse() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
 
-        If.orElse(false, testHelper::thenCallMe1, testHelper::elseCallMe);
+        If.orElse(false, callTestHelper::thenCallMe1, callTestHelper::elseCallMe);
 
-        verify(testHelper).elseCallMe();
+        verify(callTestHelper).elseCallMe();
     }
 
     @Test
@@ -140,19 +140,19 @@ public class OrElseTest {
 
     @Test
     public void isNullThen_thenCall_callThenCall_whenObjectIsNull() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
 
-        If.isNullThen(null, testHelper::thenCallMe1);
+        If.isNullThen(null, callTestHelper::thenCallMe1);
 
-        verify(testHelper).thenCallMe1();
+        verify(callTestHelper).thenCallMe1();
     }
 
     @Test
     public void isNullThen_thenCall_doNotCall_whenObjectIsNonNull() {
-        IfTest.TestHelper testHelper = mock(IfTest.TestHelper.class);
+        CallTestHelper callTestHelper = mock(CallTestHelper.class);
 
-        If.isNullThen("something", testHelper::thenCallMe1);
+        If.isNullThen("something", callTestHelper::thenCallMe1);
 
-        verify(testHelper, times(0)).thenCallMe1();
+        verify(callTestHelper, times(0)).thenCallMe1();
     }
 }
