@@ -1,5 +1,111 @@
-This library helps to improve code readability of if else statements. It has introduced two different syntax. Following
-examples shows its usage
+### Why this library
+
+This library does not provide anything that you can not achieve with provided java language
+`if else` statements. It does not simplify your business logic or `if` checks, so what it does basically?
+It helps you to write more readable code and how it does that, let's understand it by examples.
+
+- I saw a similar code snippet in one of projects, It throw exception based on the response code of the response
+entity
+
+    ```
+    EmployeeDTO getEmployeeDetail(String employeeCode) {
+          ResponseEntity<EmployeeDTO> responseEntity;
+          try {
+                  responseEntity = restTemplate.getForEntity(url, EmployeeDTO.class);
+          } catch(HttpServerErrorException ex) {
+              throw EmployeeServiceException("Failed to fetch.......");
+          }
+
+          if (responseEntity.getStatusCode() != HttpStatus.OK) {
+              throw new EmployeeServiceException(format(ERROR_MESSAGE, responseEntity.getStatusCode()));
+          }
+
+          if (responseEntity.getBody() == null || "".equals(responseEntity.getBody().toString())) {
+              throw new NoContentException(format(NO_CONTENT_FOUND_MESSAGE, fromDate, toDate));
+          }
+
+          return responseEntity.getBody();
+    }
+    ```
+
+  Let's write this code with library
+
+  ```
+        EmployeeDTO getEmployeeDetail(String employeeCode) {
+              ResponseEntity<EmployeeDTO> responseEntity;
+              try {
+                   responseEntity = restTemplate.getForEntity(url, EmployeeDTO.class);
+              } catch(HttpServerErrorException ex) {
+                  throw EmployeeServiceException("Failed to fetch.......");
+              }
+
+          return If.isTrue(responseEntity.getStatusCode() != HttpStatus.OK)
+             .thenThrow(() -> new EmployeeServiceException(format(ERROR_MESSAGE, responseEntity.getStatusCode())))
+             .elseIf(responseEntity.getBody() == null)
+             .thenThrow(() -> new NoContentException(format(NO_CONTENT_FOUND_MESSAGE, fromDate, toDate))
+             .elseGet((responseEntity) -> responseEntity.getBody())
+        }
+  ```
+Don't you think, it is more readable. It tells a better story that you do this otherwise do this or this.
+
+- Let's assume, you have to fetch employee skills provided by multiple services, and based on some flag you fetch the
+ details from one of them and return it. see below
+    ```
+    List<EmployeeSkill> getEmployeeSkills(String code) {
+        final EmployeeClient employeeClient;
+        if(isEmployeeGlobalServiceEnabled()) {
+            employeeClient = globalEmployeeServceFactory.getEmployeeClient();
+        } else {
+            employeeClient = localEmployeeServiceFactory.getEmployeeClient();
+        }
+        Employee employee = employeeRepository.findByCode(code);
+        return employeeClient.getEmployeeSkills(employee.id)
+    }
+    ```
+
+Now try to understand the code above, even though very simple statements but you might have spend some time with
+`employeeClient` variable to track it. if this method had been large, it would have been more difficult to track it.
+Every time, we refer a variable, we have to consider all possible assignments to it, if it has multiple assignments we have
+to understand all of them. Now, let's write the same code using library
+
+    ```
+    List<EmployeeSkill> getEmployeeSkills(String code) {
+        final EmployeeClient employeeClient = If.isTrue(isEmployeeGlobalServiceEnabled())
+                                                .thenGet(() -> globalEmployeeServceFactory.getEmployeeClient())
+                                                .elseGet(() -> localEmployeeServiceFactory.getEmployeeClient())
+
+        Employee employee = employeeRepository.findByCode(code);
+        return employeeClient.getEmployeeSkills(employee.id)
+    }
+    ```
+
+As a programmer`if else` are now basic syntax and we don't think, it is an over head for above basic examples
+because that's what we have been reading since we learnt programming, it takes few extra seconds than normal sequential
+statements to understand these simple syntax?. But why to spend even seconds on these syntax?
+
+People comes up with argument, what if statements in `if else` are large block of code. Well, we should take
+large `if else` blocks in methods because they are doing one and only one thing and it very cohesive piece of code. How
+can i say this? because that's the reason they belong together in the block otherwise you would have taken them out of
+blocks above or below. You must be thinking, why are we discussion it here? Because
+this library implicitly(syntax will be difficult) makes you, to refactor large `if else` code in methods. If you have
+large block of codes
+
+    ```
+    void doSomething() {
+       statement0
+       If.isTrue(condition)
+         .thenCall(() -> {
+           statement11
+           statement21
+           statement31
+           statement41
+       }).elseCall(() -> {
+           statement21
+           statement22
+           statement23
+           statement24
+       })
+    }
 
 
 1. __*If else syntax for expression*__
