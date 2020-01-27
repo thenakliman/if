@@ -7,24 +7,24 @@ It helps you to write more readable code and how it does that, let's understand 
 - I saw a similar code snippet in one of projects, It throw exception based on the response code of the response
 entity
 
-    EmployeeDTO getEmployeeDetail(String employeeCode) {
-          ResponseEntity<EmployeeDTO> responseEntity;
-          try {
-                  responseEntity = restTemplate.getForEntity(url, EmployeeDTO.class);
-          } catch(HttpServerErrorException ex) {
-              throw EmployeeServiceException("Failed to fetch.......");
-          }
+        EmployeeDTO getEmployeeDetail(String employeeCode) {
+              ResponseEntity<EmployeeDTO> responseEntity;
+              try {
+                      responseEntity = restTemplate.getForEntity(url, EmployeeDTO.class);
+              } catch(HttpServerErrorException ex) {
+                  throw EmployeeServiceException("Failed to fetch.......");
+              }
 
-          if (responseEntity.getStatusCode() != HttpStatus.OK) {
-              throw new EmployeeServiceException(format(ERROR_MESSAGE, responseEntity.getStatusCode()));
-          }
+              if (responseEntity.getStatusCode() != HttpStatus.OK) {
+                  throw new EmployeeServiceException(format(ERROR_MESSAGE, responseEntity.getStatusCode()));
+              }
 
-          if (responseEntity.getBody() == null || "".equals(responseEntity.getBody().toString())) {
-              throw new NoContentException(format(NO_CONTENT_FOUND_MESSAGE, fromDate, toDate));
-          }
+              if (responseEntity.getBody() == null || "".equals(responseEntity.getBody().toString())) {
+                  throw new NoContentException(format(NO_CONTENT_FOUND_MESSAGE, fromDate, toDate));
+              }
 
-          return responseEntity.getBody();
-    }
+              return responseEntity.getBody();
+        }
 
   Let's write this code with library
 
