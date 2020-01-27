@@ -217,9 +217,9 @@ then change it to
 + when a value is calculated one way, if a variable is null and other way if variable is not null
         String boxMessage;
         if(box == null) {
-            boxMessage = "Box exist";
-        } else {
             boxMessage = "Box does not exist";
+        } else {
+            boxMessage = "Box exist";
         }
 
         showMessage(boxMessage)
@@ -227,13 +227,13 @@ then change it to
     Simplified as
 
         String boxMessage = if.isNull(box)
-                              .thenValue("Box exist")
-                              .elseValue("Box does not exist");
+                              .thenValue("Box does not exist")
+                              .elseValue("Box exist");
         showMessage(boxMessage);
     
     And as
 
-        String boxMessage = if.nullOrElse(box, "Box exist", "Box does not exist");
+        String boxMessage = if.nullOrElse(box, "Box does not exist", "Box exist");
         showMessage(boxMessage);
 
 + A value is calculated if a variable is null otherwise use given value,
