@@ -6,7 +6,7 @@ It helps you to write more readable code and how it does that, let's understand 
 
 - I saw a similar code snippet in one of projects, It throw exception based on the response code of the response
 entity
-
+```java
         EmployeeDTO getEmployeeDetail(String employeeCode) {
               ResponseEntity<EmployeeDTO> responseEntity;
               try {
@@ -25,9 +25,9 @@ entity
 
               return responseEntity.getBody();
         }
-
+```
   Let's write this code with library
-
+```java
         EmployeeDTO getEmployeeDetail(String employeeCode) {
               ResponseEntity<EmployeeDTO> responseEntity;
               try {
@@ -42,12 +42,12 @@ entity
              .thenThrow(() -> new NoContentException(format(NO_CONTENT_FOUND_MESSAGE, fromDate, toDate))
              .elseGet((responseEntity) -> responseEntity.getBody())
         }
-
+```
 Don't you think, it is more readable. It tells a better story that you do this otherwise do this or this.
 
 - Let's assume, you have to fetch employee skills provided by multiple services, and based on some flag you fetch the
  details from one of them and return it. see below
-
+```java
     List<EmployeeSkill> getEmployeeSkills(String code) {
         final EmployeeClient employeeClient;
         if(isEmployeeGlobalServiceEnabled()) {
@@ -58,12 +58,12 @@ Don't you think, it is more readable. It tells a better story that you do this o
         Employee employee = employeeRepository.findByCode(code);
         return employeeClient.getEmployeeSkills(employee.id)
     }
-
+```
 Now try to understand the code above, even though very simple statements but you might have spend some time with
 `employeeClient` variable to track it. if this method had been large, it would have been more difficult to track it.
 Every time, we refer a variable, we have to consider all possible assignments to it, if it has multiple assignments we have
 to understand all of them. Now, let's write the same code using library
-
+```java
     List<EmployeeSkill> getEmployeeSkills(String code) {
         final EmployeeClient employeeClient = If.isTrue(isEmployeeGlobalServiceEnabled())
                                                 .thenGet(() -> globalEmployeeServceFactory.getEmployeeClient())
@@ -72,7 +72,7 @@ to understand all of them. Now, let's write the same code using library
         Employee employee = employeeRepository.findByCode(code);
         return employeeClient.getEmployeeSkills(employee.id)
     }
-
+```
 As a programmer`if else` are now basic syntax and we don't think, it is an over head for above basic examples
 because that's what we have been reading since we learnt programming, it takes few extra seconds than normal sequential
 statements to understand these simple syntax?. But why to spend even seconds on these syntax?
@@ -83,7 +83,7 @@ can i say this? because that's the reason they belong together in the block othe
 blocks, above or below. You must be thinking, why are we discussion it here? Because
 this library implicitly(syntax will be difficult) makes you, to refactor large `if else` code in methods. If you have
 large block of code, the syntax will make you think about refactoring.
-
+```java
     void doSomething() {
        statement0
        If.isTrue(condition)
@@ -99,9 +99,9 @@ large block of code, the syntax will make you think about refactoring.
            statement24
        })
     }
-
+```
 then change it to
-
+```java
     void doSomething1() {
            statement11
            statement21
@@ -122,12 +122,12 @@ then change it to
          .thenCall(() -> doSomething1())
          .elseCall(() -> doSomething2())
     }
-
+```
 
 1. __*If else syntax for expression*__
 
 + If an expression is true then user `x` otherwise use `y`
-
+```java
         int allowedSpeed;
         if(currentRoad == "highWay") {
             allowedSpeed = 160km/h;
@@ -136,38 +136,39 @@ then change it to
         }
     
         setSpeed(allowedSpeed);
-    
+```
     Simplified as
-
+```java
         int allowedSpeed = if.isTrue(currentRoad == "highWay")
                              .thenValue(160km/h)
                              .elseValue(40km/h);
         setSpeed(allowedSpeed);
+```
     And as
-
+```java
         int allowedSpeed = if.orElse(currentRoad == "highWay", 160km/h, 40km/h);
         setSpeed(allowedSpeed);
-
+```
 + If an expression is true then process something otherwise use some other process
-
+```java
         if(currentLocation == "known") {
             driveWithFun();
         } else {
             informPassenger();    
         }
-
+```
     Simplified as
-
+```java
         if.isTrue(currentRoad == "known")
           .thenCall(() -> driveWithFun())
           .elseCall(() -> informPassenger());
-
+```
     And as
-
+```java
         if.orElse(currentRoad == "known", () -> driveWithFun(), () -> informPassenger());
-
+```
 + If an expression is true then get a value from one mechanism otherwise from a different one 
-
+```java
         int allowedSpeed;
         if(allowedSpeedAtCurrentLocation == "unknown") {
             allowedSpeed = callAFriendAndGetIt();
@@ -176,24 +177,25 @@ then change it to
         }
 
         accelerateToGivenSpeed(allowedSpeed)
-    
+```
     Simplified as
-
+```java
         int allowedSpeed = if.isTrue(allowedSpeedAtCurrentLocation == "unknown")
                              .thenGet(() -> callAFriendAndGetIt())
                              .elseGet(() -> getItFromMyBrain());
         accelerateToGivenSpeed(allowedSpeed)
-    
+```
     And as
-
+```java
         int allowedSpeed = if.orElse(allowedSpeedAtCurrentLocation == "unknown",
                                      () -> callAFriendAndGetIt(),
                                      () -> getItFromMyBrain());
 
         accelerateToGivenSpeed(allowedSpeed)
-
+```
 
 + If something unexpected occurred and need to raise exception else process
+```java
         if(currentSpeed == "unacceptable-level") {
             throw new UnacceptableSpeed(currentSpeed);
         } else {
@@ -201,20 +203,21 @@ then change it to
         }
 
         driveSmoothly(allowedSpeed)
-    
+```
     Simplified as
-
+```java
         if.isTrue(currentSpeed == "unacceptable-level")
           .thenThrow(() -> new UnacceptableSpeed(currentSpeed))
           .elseCall(() -> informSpeedIsAcceptable());
         driveSmoothly(allowedSpeed)
-
+```
     
     all the above methods could be used in combinations, please refer test cases for all possible scenarios
 
 2. __*If else for handling Null object*__
 
 + when a value is calculated one way, if a variable is null and other way if variable is not null
+```java
         String boxMessage;
         if(box == null) {
             boxMessage = "Box does not exist";
@@ -223,37 +226,38 @@ then change it to
         }
 
         showMessage(boxMessage)
-
+```
     Simplified as
-
+```java
         String boxMessage = if.isNull(box)
                               .thenValue("Box does not exist")
                               .elseValue("Box exist");
         showMessage(boxMessage);
-    
+```
     And as
-
+```java
         String boxMessage = if.nullOrElse(box, "Box does not exist", "Box exist");
         showMessage(boxMessage);
-
+```
 + A value is calculated if a variable is null otherwise use given value,
-
+```java
         if(boxMessage == null) {
             boxMessage = generateMessage();
         }
 
         showMessage(boxMessage);
-    
+```
     Simplified version:
-
+```java
         String boxMessage = if.isNull(boxMessage)
                               .thenGet(() -> generateMessage())
                               .elseValue(boxMessage);
 
         showMessage(boxMessage);
-
+```
 
 + A value is calculated, if a variable is null one way, otherwise use some other way,
+```java
         if(receivedBoxMessage == null) {
             boxMessage = generateMessage();
         } else {
@@ -261,21 +265,22 @@ then change it to
         }
 
         showMessage(boxMessage);
-    
+```
     Simplified version:
-
+```java
         String boxMessage = if.isNull(receivedBoxMessage)
                               .thenGet(() -> generateMessage())
                               .elseGet(() -> generateMessageOtherWay());
 
         showMessage(boxMessage);
-
+```
     And as:
-    
+```java 
         String boxMessage = if.isNull(receivedBoxMessage, () -> generateMessage(), () -> generateMessageOtherWay());    
         showMessage(boxMessage);
-
+```
 + A value is calculated one way, if a variable is null, otherwise use non null value to generate value,
+```java
         if(receivedBoxMessage == null) {
             boxMessage = generateMessage();
         } else {
@@ -283,25 +288,26 @@ then change it to
         }
     
         showMessage(boxMessage);
-    
+```
 
     Simplified version:
+```java
         String boxMessage = if.isNull(receivedBoxMessage)
                               .thenGet(() -> generateMessage())
                               .elseMap((nonNullReceivedBoxMessage) -> generateMessage(nonNullReceivedBoxMessage));
 
         showMessage(boxMessage);
-
+```
     And as:
-
+```java
         String boxMessage = if.isNull(receivedBoxMessage,
                                       () -> generateMessage()),
                                       (nonNullReceivedBoxMessage) -> generateMessage(nonNullReceivedBoxMessage));
 
         showMessage(boxMessage);
-
+```
 + If you would like to throw an exception, if a value is null, otherwise proceed,
-
+```java
         if(boxMessage == null) {
             throw new NotFoundException("Message not found");
         } else {
@@ -309,44 +315,45 @@ then change it to
         }
 
         showMessage(boxMessage)
-    
+```
     Simplified version:
-
+```java
         String boxMessage = if.isNull(receivedBoxMessage)
                               .thenThrow(new NotFoundException("Message not found"))
                               .elseMap((nonNullReceivedBoxMessage) -> generateMessage(nonNullReceivedBoxMessage));
 
         showMessage(boxMessage)
-
+```
 and so on. see test cases to know more about available options.
 
 3. __*do something only if some condition is true, else part is empty*__
 
 + If you like to process something when condition is true else nothing
-
+```java
         if(purseStatus == "not found) {
             putCashInPocket(cash);
         }
         goToShopping();
-
+```
     Simplified version:
-
+```java
         if.isTrueThen(purseStatus == "not found").thenCall(() -> putCashInPocket(cash))
         goToShopping();
-
+```
     And as:
-
+```java
         if.isTrueThen(purseStatus == "not found", () -> putCashInPocket(cash))
         goToShopping();
-
+```
 + If you throw some exception when condition is met otherwise perform operations normally
-
+```java
         if(breakStatus == "not working") {
             throw new BreakNotWorking();
         }
         keepDriving();
-
+```
     Simplified version:
-
+```java
         if.isTrueThen(breakStatus == "not working")).thenThrow(() -> new BreakNotWorking())
         keepDriving();
+```
